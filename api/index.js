@@ -1,3 +1,5 @@
+import "reflect-metadata"
+
 import express from "express";
 const app = express()
 import userRoutes from './routes/users.js'
@@ -9,8 +11,14 @@ import cookieParser from "cookie-parser";
 import cors from 'cors'
 
 //middlewares
+app.use((req,res,next) => {
+	res.header("Access-Control-Allow-Credentials", true)
+	next()
+})
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+	origin: "http://localhost:3000"
+}))
 app.use(cookieParser())
 
 
