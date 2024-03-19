@@ -27,6 +27,7 @@ const Login = () => {
       await login(inputs)
       navigate("/")
     } catch (err) {
+      console.log("huy")
       setErr(err.response.data)
     }
   }
