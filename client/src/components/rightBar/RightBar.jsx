@@ -19,6 +19,8 @@ const RightBar = () => {
     }
   )
 
+  console.log("relationshipData", relationshipData)
+
   const {
     isLoading,
     isError,

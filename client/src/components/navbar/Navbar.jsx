@@ -4,7 +4,8 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined"
 import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined"
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined"
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined"
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined"
+
+import ExitToAppIcon from "@mui/icons-material/ExitToApp"
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined"
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined"
 import { Link } from "react-router-dom"
@@ -15,6 +16,11 @@ import { AuthContext } from "../../context/authContext"
 const Navbar = () => {
   const { toggle, darkMode } = useContext(DarkModeContext)
   const { currentUser } = useContext(AuthContext)
+
+  const handleExit = () => {
+    localStorage.removeItem("user")
+    window.location.reload()
+  }
 
   return (
     <div className="navbar">
@@ -38,8 +44,10 @@ const Navbar = () => {
         <Link to={`/profile/${currentUser.id}`}>
           <PersonOutlinedIcon />
         </Link>
+        <button onClick={handleExit}>
+          <ExitToAppIcon className="icon-button" />
+        </button>
 
-        <EmailOutlinedIcon />
         <NotificationsOutlinedIcon />
         <div className="user">
           <img src={"/upload/" + currentUser.profilePic} alt="" />

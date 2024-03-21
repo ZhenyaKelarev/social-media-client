@@ -56,6 +56,14 @@
       }
     }
 
+    button {
+      width: fit-content;
+      height: fit-content;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
     .right {
       display: flex;
       align-items: center;
