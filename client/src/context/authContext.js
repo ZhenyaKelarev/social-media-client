@@ -8,6 +8,8 @@ export const AuthContextProvider = ({ children }) => {
     JSON.parse(localStorage.getItem("user")) || null
   )
 
+  const [error, setError] = useState()
+
   const login = async (inputs) => {
     const res = await axios.post(
       "http://localhost:8800/api/auth/login",
@@ -25,7 +27,7 @@ export const AuthContextProvider = ({ children }) => {
   }, [currentUser])
 
   return (
-    <AuthContext.Provider value={{ currentUser, login }}>
+    <AuthContext.Provider value={{ currentUser, login, error }}>
       {children}
     </AuthContext.Provider>
   )

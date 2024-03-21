@@ -17,11 +17,6 @@ import { DarkModeContext } from "./context/darkModeContext"
 import { AuthContext } from "./context/authContext"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
-console.log("123")
-
-const arr = [1, 2, 3, 4]
-console.log(arr.shift())
-
 function App() {
   const { currentUser } = useContext(AuthContext)
 
@@ -78,7 +73,11 @@ function App() {
     },
     {
       path: "/register",
-      element: <Register />,
+      element: (
+        <QueryClientProvider client={queryClient}>
+          <Register />
+        </QueryClientProvider>
+      ),
     },
   ])
 

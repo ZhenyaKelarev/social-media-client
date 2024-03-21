@@ -9,8 +9,6 @@ const Login = () => {
     password: "",
   })
 
-  console.log(inputs)
-
   const [err, setErr] = useState(null)
 
   const navigate = useNavigate(AuthContext)
@@ -27,7 +25,6 @@ const Login = () => {
       await login(inputs)
       navigate("/")
     } catch (err) {
-      console.log("huy")
       setErr(err.response.data)
     }
   }
@@ -36,11 +33,10 @@ const Login = () => {
     <div className="login">
       <div className="card">
         <div className="left">
-          <h1>Hello World.</h1>
+          <h1>Hello Friends!</h1>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero cum,
-            alias totam numquam ipsa exercitationem dignissimos, error nam,
-            consequatur.
+            You can check social media project and will be a member of this pet
+            website.
           </p>
           <span>Don't you have an account?</span>
           <Link to="/register">

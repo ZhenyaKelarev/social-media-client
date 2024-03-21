@@ -14,8 +14,6 @@ const Posts = ({ userId }) => {
       makeRequest.get("/posts?userId=" + userId).then((res) => res.data),
   })
 
-  console.log("posts", posts)
-
   if (isLoading) return <h1>Loading...</h1>
 
   if (isError) return <h1>Something went wrong</h1>

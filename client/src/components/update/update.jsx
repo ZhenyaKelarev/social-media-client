@@ -44,8 +44,6 @@ function Update({ setOpenUpdate, user }) {
     let coverUrl
     let profileUrl
 
-    console.log(user.coverPic)
-
     coverUrl = cover ? await upload(cover) : user.coverPic
     profileUrl = profile ? await upload(profile) : user.profilePic
 

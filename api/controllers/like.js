@@ -20,8 +20,6 @@ export const addLike = (req, res) => {
     const q = "INSERT INTO likes (`userId`,`postId`) VALUES (?)"
     const values = [userInfo.id, req.body.postId]
 
-    console.log("userInfo", userInfo)
-
     db.query(q, [values], (err, data) => {
       if (err) return res.status(500).json(err)
       return res.status(200).json("Post has been liked.")

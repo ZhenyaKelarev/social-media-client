@@ -44,7 +44,6 @@ const Share = () => {
   }
 
   const { currentUser } = useContext(AuthContext)
-  console.log("currentUser", currentUser)
 
   return (
     <div className="share">

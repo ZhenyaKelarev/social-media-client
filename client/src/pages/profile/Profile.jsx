@@ -109,6 +109,7 @@ const Profile = () => {
             <MoreVertIcon />
           </div>
         </div>
+
         <Posts userId={userId} />
       </div>
       {openUpdate && <Update setOpenUpdate={setOpenUpdate} user={data} />}

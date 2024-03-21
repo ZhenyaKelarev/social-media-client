@@ -6,7 +6,7 @@
   justify-content: center;
 
   .card {
-    width: 50%;
+    width: min-content;
     display: flex;
     flex-direction: row-reverse;
     background-color: white;
@@ -30,14 +30,14 @@
         font-size: 100px;
         line-height: 100px;
       }
-      
+
       p {
       }
 
       span {
         font-size: 14px;
       }
-      
+
       button {
         width: 50%;
         padding: 10px;
@@ -56,22 +56,47 @@
       flex-direction: column;
       gap: 50px;
       justify-content: center;
+      width: 400px;
 
       h1 {
-      color: #555;
+        color: #555;
       }
-      
+
       form {
         display: flex;
         flex-direction: column;
         gap: 30px;
-        
-        input {
-        border: none;
-        border-bottom: 1px solid lightgray;
-        padding: 20px 10px;
+
+        .form-block {
+          position: relative;
+
+          input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid lightgray;
+            padding: 20px 10px;
+            margin-bottom: 5px;
+          }
+          p {
+            position: absolute;
+          }
         }
-        
+
+        .form-button {
+          margin-top: 10px;
+        }
+
+        input {
+          width: 100%;
+          border: none;
+          border-bottom: 1px solid lightgray;
+          padding: 20px 10px;
+        }
+
+        .form-warning {
+          color: red;
+        }
+
         button {
           width: 50%;
           padding: 10px;

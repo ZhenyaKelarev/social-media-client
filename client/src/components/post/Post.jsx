@@ -23,7 +23,6 @@ const Post = ({ post }) => {
     queryFn: () =>
       makeRequest.get("/likes?postId=" + post.id).then((res) => res.data),
   })
-  console.log("post", post)
 
   const { isLoading: isCommentsLoading, data: comments } = useQuery({
     queryKey: ["comments", post.id],
