@@ -13,6 +13,7 @@ const Posts = ({ userId }) => {
     queryFn: () =>
       makeRequest.get("/posts?userId=" + userId).then((res) => res.data),
   })
+  console.log("posts", posts)
 
   if (isLoading) return <h1>Loading...</h1>
 

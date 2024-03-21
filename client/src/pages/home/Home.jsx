@@ -10,7 +10,7 @@ const Home = () => {
 
   return (
     <div className="home">
-      <Stories />
+      <Stories userId={currentUser.id} />
       <Share />
       <Posts userId={currentUser.id} />
     </div>

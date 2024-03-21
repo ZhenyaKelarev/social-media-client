@@ -44,10 +44,7 @@ const Navbar = () => {
         <Link to={`/profile/${currentUser.id}`}>
           <PersonOutlinedIcon />
         </Link>
-        <button onClick={handleExit}>
-          <ExitToAppIcon className="icon-button" />
-        </button>
-
+        <ExitToAppIcon onClick={handleExit} className="icon-button" />
         <NotificationsOutlinedIcon />
         <div className="user">
           <img src={"/upload/" + currentUser.profilePic} alt="" />

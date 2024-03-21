@@ -1,33 +1,36 @@
 import { useContext } from "react"
 import "./stories.scss"
+import { useQuery } from "@tanstack/react-query"
+import { makeRequest } from "../../axios"
 import { AuthContext } from "../../context/authContext"
 
-const Stories = () => {
+const Stories = ({ userId }) => {
   const { currentUser } = useContext(AuthContext)
 
-  //TEMPORARY
-  const stories = [
-    {
-      id: 1,
-      name: "John Doe",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-    },
-    {
-      id: 2,
-      name: "John Doe",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-    },
-    {
-      id: 3,
-      name: "John Doe",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-    },
-    {
-      id: 4,
-      name: "John Doe",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-    },
-  ]
+  const {
+    isLoading,
+    isError,
+    data: stories,
+  } = useQuery({
+    queryKey: ["stories"],
+    queryFn: () => makeRequest.get("/stories").then((res) => res.data),
+  })
+
+  const {
+    isLoading: usersIsLoading,
+    isError: usersIsError,
+    data: users,
+  } = useQuery({
+    queryKey: ["allUsers", userId],
+    queryFn: () =>
+      makeRequest
+        .get(`/users/allUsers?userId=${userId}`)
+        .then((res) => res.data),
+  })
+
+  if (isLoading || usersIsLoading) return <h1>Loading...</h1>
+
+  if (isError || usersIsError) return <h1>Something went wrong</h1>
 
   return (
     <div className="stories">
@@ -36,7 +39,7 @@ const Stories = () => {
         <span>{currentUser.name}</span>
         <button>+</button>
       </div>
-      {stories.map((story) => (
+      {stories?.map((story) => (
         <div className="story" key={story.id}>
           <img src={story.img} alt="" />
           <span>{story.name}</span>
