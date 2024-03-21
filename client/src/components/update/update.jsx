@@ -7,9 +7,9 @@ function Update({ setOpenUpdate, user }) {
   const [cover, setCover] = useState(null)
   const [profile, setProfile] = useState(null)
   const [texts, setTexts] = useState({
-    name: "",
-    city: "",
-    website: "",
+    name: user.name,
+    city: user.city,
+    website: user.website,
   })
 
   const upload = async (file) => {
@@ -98,7 +98,8 @@ function Update({ setOpenUpdate, user }) {
               onChange={(e) => setProfile(e.target.files[0])}
             />
           </div>
-          <label>Email</label>
+
+          {/* <label>Email</label>
           <input
             type="text"
             value={texts.email}
@@ -111,7 +112,7 @@ function Update({ setOpenUpdate, user }) {
             value={texts.password}
             name="password"
             onChange={handleChange}
-          />
+          /> */}
           <label>Name</label>
           <input
             type="text"
