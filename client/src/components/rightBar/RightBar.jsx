@@ -19,8 +19,6 @@ const RightBar = () => {
     }
   )
 
-  console.log("relationshipData", relationshipData)
-
   const {
     isLoading,
     isError,
@@ -28,7 +26,9 @@ const RightBar = () => {
   } = useQuery({
     queryKey: ["allUsers", userId],
     queryFn: () =>
-      makeRequest.get(`/allUsers?userId=${userId}`).then((res) => res.data),
+      makeRequest
+        .get(`/users/allUsers?userId=${userId}`)
+        .then((res) => res.data),
   })
 
   const queryClient = useQueryClient()
@@ -64,7 +64,7 @@ const RightBar = () => {
           <span>Suggestions For You</span>
           {suggestionUsers.map((user) => {
             return (
-              <div className="user">
+              <div key={user.id} className="user">
                 <div className="userInfo">
                   <img
                     src={
