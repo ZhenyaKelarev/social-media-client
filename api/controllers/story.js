@@ -10,12 +10,12 @@ export const getStories = (req, res) => {
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!")
 
-    const q = `SELECT * FROM stories`
+    const q = `SELECT s.*, u.id AS userId, name FROM stories AS s JOIN users AS u ON (u.id = s.userId) WHERE s.userId = ?`
 
     const values =
       userId !== "undefined" ? [userId] : [userInfo.id, userInfo.id]
 
-    db.query(q, (err, data) => {
+    db.query(q, values, (err, data) => {
       if (err) return res.status(500).json(err)
       return res.status(200).json(data)
     })
@@ -29,15 +29,9 @@ export const addStory = (req, res) => {
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!")
 
-    const q =
-      "INSERT INTO posts (`desc`, `img`, `createdAt`, `userId`) VALUES (?)"
+    const q = "INSERT INTO stories (`img`, `userId`) VALUES (?)"
 
-    const values = [
-      req.body.desc,
-      req.body.img,
-      moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-      userInfo.id,
-    ]
+    const values = [req.body.img, userInfo.id]
     db.query(q, [values], (err, data) => {
       if (err) return res.status(500).json(err)
       return res.status(200).json("Post has been created")
