@@ -36,7 +36,7 @@ const Register = () => {
   })
 
   const handleClick = async (data) => {
-    mutation.mutateAsync(data)
+    mutation.mutate(data)
   }
 
   return (

@@ -1,44 +1,41 @@
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import "./stories.scss"
+import { useQuery } from "@tanstack/react-query"
+import { makeRequest } from "../../axios"
 import { AuthContext } from "../../context/authContext"
+import AddStory from "../../components/modals/addStory"
 
-const Stories = () => {
+const Stories = ({ userId }) => {
   const { currentUser } = useContext(AuthContext)
+  const [openModal, setOpenModal] = useState(false)
 
-  //TEMPORARY
-  const stories = [
-    {
-      id: 1,
-      name: "John Doe",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-    },
-    {
-      id: 2,
-      name: "John Doe",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-    },
-    {
-      id: 3,
-      name: "John Doe",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-    },
-    {
-      id: 4,
-      name: "John Doe",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-    },
-  ]
+  const {
+    isLoading,
+    isError,
+    data: stories,
+  } = useQuery({
+    queryKey: ["stories"],
+    queryFn: () =>
+      makeRequest.get("/stories?userId=" + userId).then((res) => res.data),
+  })
+
+  if (isLoading) return <h1>Loading...</h1>
+
+  if (isError) return <h1>Something went wrong</h1>
 
   return (
     <div className="stories">
       <div className="story">
         <img src={"/upload/" + currentUser.profilePic} alt="" />
         <span>{currentUser.name}</span>
-        <button>+</button>
+        <button onClick={() => setOpenModal(true)}>+</button>
       </div>
-      {stories.map((story) => (
+      {openModal && (
+        <AddStory setOpenUpdate={setOpenModal} userId={currentUser.id} />
+      )}
+      {stories?.map((story) => (
         <div className="story" key={story.id}>
-          <img src={story.img} alt="" />
+          <img src={"/upload/" + story.img} alt="" />
           <span>{story.name}</span>
         </div>
       ))}

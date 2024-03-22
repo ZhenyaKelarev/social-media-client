@@ -12,12 +12,21 @@ import { Link } from "react-router-dom"
 import { useContext } from "react"
 import { DarkModeContext } from "../../context/darkModeContext"
 import { AuthContext } from "../../context/authContext"
+import { useMutation } from "@tanstack/react-query"
+import { makeRequest } from "../../axios"
 
 const Navbar = () => {
   const { toggle, darkMode } = useContext(DarkModeContext)
   const { currentUser } = useContext(AuthContext)
 
+  const mutation = useMutation({
+    mutationFn: () => {
+      return makeRequest.post("/auth/logout")
+    },
+  })
+
   const handleExit = () => {
+    mutation.mutate()
     localStorage.removeItem("user")
     window.location.reload()
   }
@@ -44,10 +53,7 @@ const Navbar = () => {
         <Link to={`/profile/${currentUser.id}`}>
           <PersonOutlinedIcon />
         </Link>
-        <button onClick={handleExit}>
-          <ExitToAppIcon className="icon-button" />
-        </button>
-
+        <ExitToAppIcon onClick={handleExit} className="icon-button" />
         <NotificationsOutlinedIcon />
         <div className="user">
           <img src={"/upload/" + currentUser.profilePic} alt="" />
