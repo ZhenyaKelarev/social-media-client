@@ -13,21 +13,29 @@ const Register = () => {
     formState: { errors },
   } = useForm()
 
+  const navigate = useNavigate()
+
   const [err, setErr] = useState(null)
+
+  const mutationLogin = useMutation({
+    mutationFn: (inputs) => {
+      return authRoute.loginUser(inputs)
+    },
+  })
 
   const mutation = useMutation({
     mutationFn: (formData) => {
       return authRoute.registerUser(formData)
     },
-    onError: (err) => {
-      console.log("err", err)
-    },
-    onSuccess: (data) => {
-      console.log("success", data)
-      // await mutationLogin.mutate(data)
+    onSuccess: async (data) => {
+      console.log("success")
+      await mutationLogin.mutate(data)
       // setCurrentUser(data.user)
       // navigate("/")
       // navigate("/")
+    },
+    onError: (err) => {
+      console.log("err", err)
     },
   })
 

@@ -58,7 +58,6 @@ function App() {
           <Layout />
         </ProtectedRoute>
       ),
-      errorElement: <Page404 />,
       children: [
         {
           path: "/",
@@ -69,6 +68,7 @@ function App() {
           element: <Profile />,
         },
       ],
+      errorElement: <Page404 />,
     },
     {
       path: "/login",

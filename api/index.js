@@ -13,6 +13,7 @@ import cookieParser from "cookie-parser"
 import cors from "cors"
 import multer from "multer"
 
+// const prisma = new PrismaClient()
 //middlewares
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", true)

@@ -51,7 +51,11 @@ const RightBar = () => {
 
   if (isError) return <h1>error...</h1>
 
-  const suggestionUsers = [users[0], users[1]]
+  const suggestionUsers = users.filter((user, id) => {
+    if (user && id < 2) {
+      return user
+    }
+  })
 
   return (
     <div className="rightBar">
@@ -65,10 +69,10 @@ const RightBar = () => {
                   <img
                     src={
                       user.profilePic
-                        ? "/upload" + user.profilePic
+                        ? "/upload/" + user.profilePic
                         : "/upload/defaultAvatar.jpeg"
                     }
-                    alt=""
+                    alt="default avatar"
                   />
                   <span>{user.name}</span>
                 </div>

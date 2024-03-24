@@ -1,18 +1,22 @@
 import Post from "../post/Post"
 import { useQuery } from "@tanstack/react-query"
 import { makeRequest } from "../../axios"
+import { useGetPosts } from "./Services/queries"
 import "./posts.scss"
 
 const Posts = ({ userId }) => {
+  const onSuccess = (data) => {
+    console.log("success data", data)
+  }
+
+  const onError = (error) => {
+    console.log("error data", error)
+  }
   const {
+    data: posts,
     isLoading,
     isError,
-    data: posts,
-  } = useQuery({
-    queryKey: ["posts", userId],
-    queryFn: () =>
-      makeRequest.get("/posts?userId=" + userId).then((res) => res.data),
-  })
+  } = useGetPosts(userId, onSuccess, onError)
 
   if (isLoading) return <h1>Loading...</h1>
 
