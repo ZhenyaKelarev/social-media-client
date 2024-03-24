@@ -34,9 +34,16 @@ const getUserInfo = async () => {
 }
 
 const deletePost = async (postId, config) => {
-  console.log("config", config)
   const result = await makeRequest
     .delete("/posts/" + postId, config)
+    .then((r) => r.data)
+    .catch((e) => e.message)
+  return result
+}
+
+const addPost = async (newPost) => {
+  const result = await makeRequest
+    .post("/posts", newPost)
     .then((r) => r.data)
     .catch((e) => e.message)
   return result
@@ -56,6 +63,7 @@ const authRoute = {
   registerUser,
   getUserInfo,
   deletePost,
+  addPost,
   // tokenization,
 }
 export default authRoute

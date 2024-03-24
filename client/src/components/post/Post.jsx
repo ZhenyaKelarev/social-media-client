@@ -62,8 +62,6 @@ const Post = ({ post }) => {
   //     queryClient.invalidateQueries({ queryKey: ["posts"] })
   //   },
   // })
-
-  console.log("post.img", post.img)
   const handleLike = () => {
     mutation.mutate(data.includes(currentUser.id))
   }
