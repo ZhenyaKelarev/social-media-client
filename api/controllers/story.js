@@ -4,7 +4,7 @@ import moment from "moment"
 
 export const getStories = (req, res) => {
   const userId = req.query.userId
-  const token = req.cookies.accessToken
+  const token = req.headers.authorization
   if (!token) return res.status(401).json("Not logged in!")
 
   jwt.verify(token, "secretkey", (err, userInfo) => {
@@ -23,7 +23,7 @@ export const getStories = (req, res) => {
 }
 
 export const addStory = (req, res) => {
-  const token = req.cookies.accessToken
+  const token = req.headers.authorization
   if (!token) return res.status(401).json("Not logged in!")
 
   jwt.verify(token, "secretkey", (err, userInfo) => {
@@ -40,7 +40,7 @@ export const addStory = (req, res) => {
 }
 
 export const deleteStory = (req, res) => {
-  const token = req.cookies.accessToken
+  const token = req.headers.authorization
   if (!token) return res.status(401).json("Not logged in!")
 
   jwt.verify(token, "secretkey", (err, userInfo) => {

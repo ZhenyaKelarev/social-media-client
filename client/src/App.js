@@ -19,7 +19,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 function App() {
   const { currentUser } = useContext(AuthContext)
-
+  console.log("currentUser", currentUser)
+  const token = localStorage.getItem("accessToken")
   const { darkMode } = useContext(DarkModeContext)
   const queryClient = new QueryClient()
 
@@ -41,8 +42,8 @@ function App() {
   }
 
   const ProtectedRoute = ({ children }) => {
-    if (!currentUser) {
-      return <Navigate to="/login" />
+    if (!token) {
+      return <Navigate to="/login" replace />
     }
 
     return children
@@ -69,7 +70,11 @@ function App() {
     },
     {
       path: "/login",
-      element: <Login />,
+      element: (
+        <QueryClientProvider client={queryClient}>
+          <Login />
+        </QueryClientProvider>
+      ),
     },
     {
       path: "/register",

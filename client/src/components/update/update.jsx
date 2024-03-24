@@ -1,9 +1,11 @@
 import "./update.scss"
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { makeRequest } from "../../axios"
+import { AuthContext } from "../../context/authContext"
 
 function Update({ setOpenUpdate, user }) {
+  const { currentUser, setCurrentUser } = useContext(AuthContext)
   const [cover, setCover] = useState(null)
   const [profile, setProfile] = useState(null)
   const [texts, setTexts] = useState({
@@ -33,8 +35,8 @@ function Update({ setOpenUpdate, user }) {
     mutationFn: (user) => {
       return makeRequest.put("/users", user)
     },
-    onSuccess: () => {
-      // Invalidate and refetch
+    onSuccess: (data) => {
+      setCurrentUser(...currentUser)
       queryClient.invalidateQueries({ queryKey: ["user"] })
     },
   })
