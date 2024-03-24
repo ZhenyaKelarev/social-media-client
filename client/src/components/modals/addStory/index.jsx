@@ -4,7 +4,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { makeRequest } from "../../../axios"
 
 function AddStory({ setOpenUpdate, userId }) {
-  console.log(userId)
   const [cover, setCover] = useState(null)
 
   const upload = async (file) => {

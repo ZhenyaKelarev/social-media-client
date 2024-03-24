@@ -1,9 +1,11 @@
 import "./update.scss"
-import React, { useState } from "react"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { makeRequest } from "../../axios"
+import React, { useState, useContext } from "react"
+import { AuthContext } from "../../context/authContext"
+import { upload } from "../../utils/fileManipulation"
+import { useUpdateProfilePut } from "../../pages/profile/Services/queries"
 
 function Update({ setOpenUpdate, user }) {
+  const { currentUser, setCurrentUser } = useContext(AuthContext)
   const [cover, setCover] = useState(null)
   const [profile, setProfile] = useState(null)
   const [texts, setTexts] = useState({
@@ -12,32 +14,11 @@ function Update({ setOpenUpdate, user }) {
     website: user.website,
   })
 
-  const upload = async (file) => {
-    try {
-      const formData = new FormData()
-      formData.append("file", file)
-      const res = await makeRequest.post("/upload", formData)
-      return res.data
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
   const handleChange = (e) => {
-    setTexts((prev) => ({ ...prev, [e.target.name]: [e.target.value] }))
+    setTexts((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const queryClient = useQueryClient()
-
-  const mutation = useMutation({
-    mutationFn: (user) => {
-      return makeRequest.put("/users", user)
-    },
-    onSuccess: () => {
-      // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ["user"] })
-    },
-  })
+  const updateProfile = useUpdateProfilePut()
 
   const handleClick = async (e) => {
     e.preventDefault()
@@ -47,7 +28,28 @@ function Update({ setOpenUpdate, user }) {
     coverUrl = cover ? await upload(cover) : user.coverPic
     profileUrl = profile ? await upload(profile) : user.profilePic
 
-    mutation.mutate({ ...texts, coverPic: coverUrl, profilePic: profileUrl })
+    const updatedUser = {
+      ...currentUser,
+      ...texts,
+      coverPic: coverUrl,
+      profilePic: profileUrl,
+    }
+
+    updateProfile.mutate(
+      {
+        ...texts,
+        coverPic: coverUrl,
+        profilePic: profileUrl,
+      },
+      {
+        onSuccess: () => {
+          console.log("updatedUser", updatedUser)
+          // setCurrentUser(updatedUser)
+          // localStorage.setItem("user", JSON.stringify(updatedUser))
+        },
+      }
+    )
+
     setOpenUpdate(false)
   }
 
@@ -68,7 +70,6 @@ function Update({ setOpenUpdate, user }) {
                   }
                   alt=""
                 />
-                {/* <CloudUploadIcon className="icon" /> */}
               </div>
             </label>
             <input

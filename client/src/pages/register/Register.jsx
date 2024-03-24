@@ -1,10 +1,10 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link, redirect, useNavigate } from "react-router-dom"
 import { useState, useContext } from "react"
-import { AuthContext } from "../../context/authContext"
 import "./register.scss"
 import { useForm } from "react-hook-form"
 import axios from "axios"
 import { useMutation } from "@tanstack/react-query"
+import authRoute from "../../axios/userApi"
 
 const Register = () => {
   const {
@@ -13,30 +13,26 @@ const Register = () => {
     formState: { errors },
   } = useForm()
 
-  const navigate = useNavigate()
-
   const [err, setErr] = useState(null)
-  const { login } = useContext(AuthContext)
 
   const mutation = useMutation({
     mutationFn: (formData) => {
-      return axios.post("http://localhost:8800/api/auth/register", formData, {
-        withCredentials: true,
-      })
-    },
-    onSuccess: async (formData) => {
-      await login(formData.data)
-      navigate("/")
-      window.location.reload()
+      return authRoute.registerUser(formData)
     },
     onError: (err) => {
-      // Invalidate and refetch
-      setErr(err.response.data)
+      console.log("err", err)
+    },
+    onSuccess: (data) => {
+      console.log("success", data)
+      // await mutationLogin.mutate(data)
+      // setCurrentUser(data.user)
+      // navigate("/")
+      // navigate("/")
     },
   })
 
   const handleClick = async (data) => {
-    mutation.mutate(data)
+    await mutation.mutate(data)
   }
 
   return (

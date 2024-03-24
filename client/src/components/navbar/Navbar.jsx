@@ -28,6 +28,7 @@ const Navbar = () => {
   const handleExit = () => {
     mutation.mutate()
     localStorage.removeItem("user")
+    localStorage.removeItem("accessToken")
     window.location.reload()
   }
 

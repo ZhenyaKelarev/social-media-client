@@ -5,13 +5,14 @@ import { makeRequest } from "../../axios"
 import { AuthContext } from "../../context/authContext"
 
 const RightBar = () => {
+  const queryClient = useQueryClient()
   const { currentUser } = useContext(AuthContext)
 
   const userId = currentUser.id
 
   const { isLoading: relationshipIsLoading, data: relationshipData } = useQuery(
     {
-      queryKey: ["relationship"],
+      queryKey: ["relationship", userId],
       queryFn: () =>
         makeRequest
           .get("/relationships?followedUserId=" + userId)
@@ -31,29 +32,24 @@ const RightBar = () => {
         .then((res) => res.data),
   })
 
-  const queryClient = useQueryClient()
-
   const mutation = useMutation({
     mutationFn: (following) => {
       if (following)
-        return makeRequest.delete("/relationships?userId=" + userId)
-      return makeRequest.post("/relationships", { userId })
+        // return makeRequest.delete("/relationships?userId=" + userId)
+        return makeRequest.post("/relationships", { userId: following })
     },
     onSuccess: () => {
-      // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ["relationship"] })
     },
   })
 
-  const handleFollow = () => {
-    mutation.mutate(relationshipData.includes(currentUser.id))
+  const handleFollow = (id) => {
+    mutation.mutate(id)
   }
 
   if (isLoading || relationshipIsLoading) return <h1>Loading...</h1>
 
   if (isError) return <h1>error...</h1>
-
-  console.log("users", users)
 
   const suggestionUsers = [users[0], users[1]]
 
@@ -77,7 +73,7 @@ const RightBar = () => {
                   <span>{user.name}</span>
                 </div>
                 <div className="buttons">
-                  <button onClick={handleFollow}>
+                  <button onClick={() => handleFollow(user.id)}>
                     {relationshipData.includes(currentUser.id)
                       ? "Following"
                       : "Follow"}

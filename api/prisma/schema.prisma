@@ -14,35 +14,63 @@ datasource db {
 }
 
 model Comment {
-  id           Int       @id @unique @default(autoincrement())
-  desc         String?
-  createdAt    DateTime?
-  userId       Int
-  postId       Int
-  commentUsers User      @relation(fields: [userId], references: [id]) //ASK
-  posts        Post      @relation(fields: [postId], references: [id]) //ASK
+  id        Int       @id @unique @default(autoincrement())
+  desc      String?
+  createdAt DateTime?
+  userId    Int
+  postId    Int
+  user      User      @relation(fields: [userId], references: [id]) //ASK
+  post      Post      @relation(fields: [postId], references: [id]) //ASK
 }
 
 model User {
-  id         Int       @id @default(autoincrement())
-  username   String
-  email      String
-  password   String
-  name       String
-  coverPic   String?
-  profilePic String?
-  city       String?
-  website    String?
-  posts      Post[] //ASK
-  Comment    Comment[] //ASK
+  id            Int            @id @unique @default(autoincrement())
+  username      String         @unique
+  email         String         @unique
+  password      String
+  name          String
+  coverPic      String?
+  profilePic    String?
+  city          String?
+  website       String?
+  posts         Post[] //ASK
+  comments      Comment[] //ASK
+  likes         Like[]
+  followedUsers Relationship[] @relation("FollowedUsers")
+  followers     Relationship[] @relation("Followers")
+  story         Story[]
 }
 
 model Post {
   id        Int       @id @unique @default(autoincrement())
   desc      String?
   img       String?
-  userId    Int
   createdAt DateTime?
+  userId    Int
   user      User      @relation(fields: [userId], references: [id]) //ASK
-  Comment   Comment[] //ASK
+  comment   Comment[] //ASK
+  likes     Like[]
+}
+
+model Like {
+  id     Int  @id @unique @default(autoincrement())
+  userId Int
+  postId Int
+  user   User @relation(fields: [userId], references: [id]) //ASK
+  post   Post @relation(fields: [postId], references: [id]) //ASK
+}
+
+model Relationship {
+  id             Int  @id @unique @default(autoincrement())
+  followedUser   User @relation("FollowedUsers", fields: [followedUserId], references: [id])
+  followedUserId Int
+  followerUser   User @relation("Followers", fields: [followerUserId], references: [id])
+  followerUserId Int
+}
+
+model Story {
+  id     Int    @id @unique @default(autoincrement())
+  img    String
+  user   User   @relation(fields: [userId], references: [id]) //ASK
+  userId Int
 }

@@ -11,6 +11,7 @@ import moment from "moment"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { makeRequest } from "../../axios"
 import { AuthContext } from "../../context/authContext"
+import authRoute from "../../axios/userApi"
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false)
@@ -45,15 +46,22 @@ const Post = ({ post }) => {
 
   const deleteMutation = useMutation({
     mutationFn: (postId) => {
-      return makeRequest.delete("/posts/" + postId)
+      return authRoute.deletePost(postId)
     },
     onSuccess: () => {
-      // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ["posts"] })
     },
   })
 
-  console.log("post.img", post.img)
+  // const deleteMutation = useMutation({
+  //   mutationFn: (postId) => {
+  //     return makeRequest.delete("/posts/" + postId)
+  //   },
+  //   onSuccess: () => {
+  //     // Invalidate and refetch
+  //     queryClient.invalidateQueries({ queryKey: ["posts"] })
+  //   },
+  // })
   const handleLike = () => {
     mutation.mutate(data.includes(currentUser.id))
   }

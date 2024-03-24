@@ -5,12 +5,14 @@ import {
   RouterProvider,
   Outlet,
   Navigate,
+  Link,
 } from "react-router-dom"
 import Navbar from "./components/navbar/Navbar"
 import LeftBar from "./components/leftBar/LeftBar"
 import RightBar from "./components/rightBar/RightBar"
 import Home from "./pages/home/Home"
 import Profile from "./pages/profile/Profile"
+import Page404 from "./pages/404"
 import "./style.scss"
 import { useContext } from "react"
 import { DarkModeContext } from "./context/darkModeContext"
@@ -19,7 +21,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 function App() {
   const { currentUser } = useContext(AuthContext)
-
+  const token = localStorage.getItem("accessToken")
   const { darkMode } = useContext(DarkModeContext)
   const queryClient = new QueryClient()
 
@@ -41,8 +43,8 @@ function App() {
   }
 
   const ProtectedRoute = ({ children }) => {
-    if (!currentUser) {
-      return <Navigate to="/login" />
+    if (!token) {
+      return <Navigate to="/login" replace />
     }
 
     return children
@@ -56,6 +58,7 @@ function App() {
           <Layout />
         </ProtectedRoute>
       ),
+      errorElement: <Page404 />,
       children: [
         {
           path: "/",
@@ -69,7 +72,11 @@ function App() {
     },
     {
       path: "/login",
-      element: <Login />,
+      element: (
+        <QueryClientProvider client={queryClient}>
+          <Login />
+        </QueryClientProvider>
+      ),
     },
     {
       path: "/register",

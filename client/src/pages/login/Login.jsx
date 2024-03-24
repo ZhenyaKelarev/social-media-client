@@ -1,6 +1,8 @@
-import { useContext, useState } from "react"
+import { useState, useContext } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { AuthContext } from "../../context/authContext"
+import authRoute from "../../axios/userApi"
+import { useMutation } from "@tanstack/react-query"
 import "./login.scss"
 
 const Login = () => {
@@ -9,24 +11,29 @@ const Login = () => {
     password: "",
   })
 
-  const [err, setErr] = useState(null)
+  const [err] = useState(null)
 
-  const navigate = useNavigate(AuthContext)
+  const navigate = useNavigate()
+
+  const { setCurrentUser } = useContext(AuthContext)
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const { login } = useContext(AuthContext)
+  const mutation = useMutation({
+    mutationFn: () => {
+      return authRoute.loginUser(inputs)
+    },
+    onSuccess: async (data) => {
+      await setCurrentUser(data.user)
+      navigate("/")
+    },
+  })
 
   const handleLogin = async (e) => {
     e.preventDefault()
-    try {
-      await login(inputs)
-      navigate("/")
-    } catch (err) {
-      setErr(err.response.data)
-    }
+    await mutation.mutate()
   }
 
   return (
