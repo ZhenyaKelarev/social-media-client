@@ -37,6 +37,8 @@ const Profile = () => {
     }
   )
 
+  console.log("relationshipData", relationshipData)
+
   const queryClient = useQueryClient()
 
   const mutation = useMutation({

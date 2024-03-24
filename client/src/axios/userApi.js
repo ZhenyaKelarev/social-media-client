@@ -22,7 +22,7 @@ const registerUser = async (formData) => {
       withCredentials: true,
     })
     .then((r) => r.data)
-    .catch((e) => console.log("e", e))
+    .catch((e) => e.message)
   return result
 }
 const getUserInfo = async () => {

@@ -27,7 +27,6 @@ const Login = () => {
     },
     onSuccess: async (data) => {
       await setCurrentUser(data.user)
-
       navigate("/")
     },
   })

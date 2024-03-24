@@ -27,7 +27,6 @@ makeRequest.interceptors.request.use(
     return config
   },
   (error) => {
-    console.log("huy")
     return Promise.reject(error)
   }
 )
@@ -50,12 +49,10 @@ makeRequest.interceptors.response.use(
       try {
         return makeRequest(originalRequest)
       } catch (err) {
-        console.log("huy")
         return Promise.reject(err)
       }
     }
-    await router.push("/auth")
-    console.log("huy")
+    await router.push("/login")
     return Promise.reject(error)
   }
 )
