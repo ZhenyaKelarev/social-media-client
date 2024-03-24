@@ -21,6 +21,18 @@ const RightBar = () => {
   )
 
   const {
+    isLoading: isFriendsIsLoading,
+    isError: isFriendsIsError,
+    data: friends,
+  } = useQuery({
+    queryKey: ["allFriends", userId],
+    queryFn: () =>
+      makeRequest
+        .get(`/users/allFriends?userId=${userId}`)
+        .then((res) => res.data),
+  })
+
+  const {
     isLoading,
     isError,
     data: users,
@@ -47,15 +59,18 @@ const RightBar = () => {
     mutation.mutate(id)
   }
 
-  if (isLoading || relationshipIsLoading) return <h1>Loading...</h1>
+  if (isLoading || relationshipIsLoading || isFriendsIsLoading)
+    return <h1>Loading...</h1>
 
-  if (isError) return <h1>error...</h1>
+  if (isError || isFriendsIsError) return <h1>error...</h1>
 
   const suggestionUsers = users.filter((user, id) => {
     if (user && id < 2) {
       return user
     }
   })
+
+  console.log("friends", friends)
 
   return (
     <div className="rightBar">
@@ -88,7 +103,7 @@ const RightBar = () => {
             )
           })}
 
-          {/* <div className="user">
+          <div className="user">
             <div className="userInfo">
               <img
                 src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
@@ -100,7 +115,7 @@ const RightBar = () => {
               <button>follow</button>
               <button>dismiss</button>
             </div>
-          </div> */}
+          </div>
         </div>
         <div className="item">
           <span>Latest Activities</span>
@@ -154,117 +169,25 @@ const RightBar = () => {
           </div>
         </div>
         <div className="item">
-          <span>Online Friends</span>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
+          <span>My Friends</span>
+          {friends?.map((friend) => {
+            return (
+              <div key={friend.id} className="user">
+                <div className="userInfo">
+                  <img
+                    src={
+                      friend.profilePic
+                        ? "/upload/" + friend.profilePic
+                        : "/upload/defaultAvatar.jpeg"
+                    }
+                    alt="avatar"
+                  />
+                  <div className="online" />
+                  <span>{friend.name}</span>
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>

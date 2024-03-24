@@ -1,5 +1,7 @@
 import { db } from "../connect.js"
 import jwt from "jsonwebtoken"
+import { PrismaClient } from "@prisma/client"
+const prisma = new PrismaClient()
 
 export const getUser = (req, res) => {
   const userId = req.params.userId
@@ -41,20 +43,37 @@ export const updateUser = (req, res) => {
   })
 }
 
-export const getAllUsers = (req, res) => {
+export const getAllUnfollowUsers = (req, res) => {
   const userId = req.query.userId
-  // const q = "SELECT * FROM users WHERE id != ?"
-
-  // const q =
-  //   "SELECT u.* FROM users AS u JOIN relationships As r ON u.id = r.followerUserId WHERE r.followedUserId = ?"
-  // const q =
-  //   "SELECT u.* FROM users u JOIN relationships r ON u.id = r.followedUserId WHERE r.followerUserId = ?"
-
-  // const q =
-  //   "SELECT u.* FROM users u WHERE u.id NOT IN (SELECT r.followedUserId FROM relationships r WHERE r.followerUserId = ?);"
+  // const q = "SELECT * FROM users WHERE id != ?" -- all users
 
   const q =
     "SELECT u.* FROM users u WHERE u.id != ? AND u.id NOT IN (SELECT r.followedUserId FROM relationships r WHERE r.followerUserId = ?)"
+
+  db.query(q, [userId, userId], (err, data) => {
+    if (err) return res.status(500).json(err)
+    const { password, ...info } = data
+    return res.json(data)
+  })
+}
+
+// PRISMA all users
+// export const getAllUsers = async (req, res) => {
+//   try {
+//     const userId = req.query.userId
+//     const users = await prisma.user.findMany()
+//     return res.status(200).json(users)
+//     console.log(users)
+//   } catch (error) {
+//     console.log("error", error)
+//   }
+// }
+
+export const getAllFriends = (req, res) => {
+  const userId = req.query.userId
+
+  const q =
+    "SELECT u.* FROM users u JOIN relationships r ON u.id = r.followedUserId WHERE r.followerUserId = ?"
 
   db.query(q, [userId, userId], (err, data) => {
     if (err) return res.status(500).json(err)

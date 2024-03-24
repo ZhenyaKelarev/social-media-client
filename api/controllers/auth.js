@@ -45,6 +45,8 @@ export const register = (req, res) => {
 //       where: { OR: [{ username }, { email }] },
 //     })
 
+//     console.log("isUserExist", isUserExist)
+
 //     if (isUserExist) return res.status(409).json("User already exists!")
 
 //     const salt = bcrypt.genSaltSync(10)
