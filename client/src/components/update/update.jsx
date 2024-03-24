@@ -44,8 +44,8 @@ function Update({ setOpenUpdate, user }) {
       {
         onSuccess: () => {
           console.log("updatedUser", updatedUser)
-          setCurrentUser(updatedUser)
-          localStorage.setItem("user", JSON.stringify(updatedUser))
+          // setCurrentUser(updatedUser)
+          // localStorage.setItem("user", JSON.stringify(updatedUser))
         },
       }
     )

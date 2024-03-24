@@ -10,14 +10,14 @@ export const getStories = (req, res) => {
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!")
 
-    const q = `SELECT s.*, u.id AS userId, name FROM stories AS s JOIN users AS u ON (u.id = s.userId) WHERE s.userId = ?`
+    const q = `SELECT s.*, u.id AS userId, name FROM stories AS s JOIN users AS u ON (u.id = s.userId) WHERE s.userId = ? ORDER BY s.id DESC`
 
     const values =
       userId !== "undefined" ? [userId] : [userInfo.id, userInfo.id]
 
     db.query(q, values, (err, data) => {
       if (err) return res.status(500).json(err)
-      return res.status(200).json(data.reverse())
+      return res.status(200).json(data)
     })
   })
 }
