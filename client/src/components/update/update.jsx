@@ -28,11 +28,28 @@ function Update({ setOpenUpdate, user }) {
     coverUrl = cover ? await upload(cover) : user.coverPic
     profileUrl = profile ? await upload(profile) : user.profilePic
 
-    updateProfile.mutate({
+    const updatedUser = {
+      ...currentUser,
       ...texts,
       coverPic: coverUrl,
       profilePic: profileUrl,
-    })
+    }
+
+    updateProfile.mutate(
+      {
+        ...texts,
+        coverPic: coverUrl,
+        profilePic: profileUrl,
+      },
+      {
+        onSuccess: () => {
+          console.log("updatedUser", updatedUser)
+          setCurrentUser(updatedUser)
+          localStorage.setItem("user", JSON.stringify(updatedUser))
+        },
+      }
+    )
+
     setOpenUpdate(false)
   }
 
