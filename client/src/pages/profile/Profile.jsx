@@ -15,13 +15,14 @@ import { makeRequest } from "../../axios"
 import { AuthContext } from "../../context/authContext"
 import { useLocation } from "react-router-dom"
 import Update from "../../components/update/update"
+import ErrorMessage from "../../components/error"
 
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false)
   const { currentUser } = useContext(AuthContext)
   const userId = parseInt(useLocation().pathname.split("/")[2])
 
-  const { isLoading, data } = useQuery({
+  const { isLoading, data, isError, error } = useQuery({
     queryKey: ["user"],
     queryFn: () =>
       makeRequest.get("/users/find/" + userId).then((res) => res.data),
@@ -56,6 +57,8 @@ const Profile = () => {
   }
 
   if (isLoading || relationshipIsLoading) return <h1>Loading...</h1>
+
+  if (isError) return <ErrorMessage message={error.response.data} />
 
   return (
     <div className="profile">

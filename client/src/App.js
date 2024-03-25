@@ -70,6 +70,7 @@ function App() {
       ],
       errorElement: <Page404 />,
     },
+
     {
       path: "/login",
       element: (
@@ -85,6 +86,11 @@ function App() {
           <Register />
         </QueryClientProvider>
       ),
+    },
+    {
+      path: "*",
+      element: <Page404 />,
+      errorElement: <Page404 />,
     },
   ])
 

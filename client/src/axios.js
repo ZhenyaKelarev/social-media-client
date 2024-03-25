@@ -35,7 +35,7 @@ makeRequest.interceptors.response.use(
   (response) => {
     return response
   },
-  async (error) => {
+  (error) => {
     const originalRequest = error.config
     // if (
     //   error.response.status === 401 &&
@@ -52,7 +52,6 @@ makeRequest.interceptors.response.use(
         return Promise.reject(err)
       }
     }
-    await router.push("/login")
     return Promise.reject(error)
   }
 )
