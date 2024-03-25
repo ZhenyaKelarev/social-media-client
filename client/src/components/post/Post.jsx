@@ -70,7 +70,7 @@ const Post = ({ post }) => {
     deleteMutation.mutate(post.id)
   }
 
-  if (isLoading || isCommentsLoading) return <h1>Loading...</h1>
+  if (isLoading || isCommentsLoading) return null
 
   if (isError) return <h1>Something went wrong</h1>
 

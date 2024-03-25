@@ -6,6 +6,7 @@ import { AuthContext } from "../../context/authContext"
 import AddStory from "../../components/modals/addStory"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper/modules"
+import { StoriesSkeleton } from "./Skeleton"
 
 import "swiper/css"
 import "swiper/css/navigation"
@@ -24,7 +25,7 @@ const Stories = ({ userId }) => {
       makeRequest.get("/stories?userId=" + userId).then((res) => res.data),
   })
 
-  if (isLoading) return <h1>Loading...</h1>
+  if (isLoading) return <StoriesSkeleton />
 
   if (isError) return <h1>Something went wrong</h1>
 
