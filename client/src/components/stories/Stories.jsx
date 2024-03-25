@@ -4,6 +4,11 @@ import { useQuery } from "@tanstack/react-query"
 import { makeRequest } from "../../axios"
 import { AuthContext } from "../../context/authContext"
 import AddStory from "../../components/modals/addStory"
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Navigation } from "swiper/modules"
+
+import "swiper/css"
+import "swiper/css/navigation"
 
 const Stories = ({ userId }) => {
   const { currentUser } = useContext(AuthContext)
@@ -33,12 +38,36 @@ const Stories = ({ userId }) => {
       {openModal && (
         <AddStory setOpenUpdate={setOpenModal} userId={currentUser.id} />
       )}
-      {stories?.map((story) => (
-        <div className="story" key={story.id}>
-          <img src={"/upload/" + story.img} alt="" />
-          <span>{story.name}</span>
-        </div>
-      ))}
+      <Swiper
+        navigation={true}
+        breakpoints={{
+          640: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+          },
+          768: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+          },
+          1024: {
+            slidesPerView: 3,
+            spaceBetween: 20,
+          },
+        }}
+        modules={[Navigation]}
+        className="mySwiper"
+        spaceBetween={20}
+        slidesPerView={5}
+        onSlideChange={() => console.log("slide change")}
+        onSwiper={(swiper) => console.log(swiper)}
+      >
+        {stories?.map((story) => (
+          <SwiperSlide className="story" key={story.id}>
+            <img src={"/upload/" + story.img} alt="" />
+            <span>{story.name}</span>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   )
 }
