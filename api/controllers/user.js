@@ -71,9 +71,18 @@ export const getAllUnfollowUsers = (req, res) => {
 
 export const getAllFriends = (req, res) => {
   const userId = req.query.userId
+  // const q = "SELECT * FROM users WHERE id != ?"
 
+  // const q =
+  //   "SELECT u.* FROM users AS u JOIN relationships As r ON u.id = r.followerUserId WHERE r.followedUserId = ?"
   const q =
     "SELECT u.* FROM users u JOIN relationships r ON u.id = r.followedUserId WHERE r.followerUserId = ?"
+
+  // const q =
+  //   "SELECT u.* FROM users u WHERE u.id NOT IN (SELECT r.followedUserId FROM relationships r WHERE r.followerUserId = ?);"
+
+  // const q =
+  //   "SELECT u.* FROM users u WHERE u.id != ? AND u.id NOT IN (SELECT r.followedUserId FROM relationships r WHERE r.followerUserId = ?)"
 
   db.query(q, [userId, userId], (err, data) => {
     if (err) return res.status(500).json(err)
