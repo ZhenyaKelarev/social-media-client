@@ -27,12 +27,8 @@ const Register = () => {
     mutationFn: (formData) => {
       return authRoute.registerUser(formData)
     },
-    onSuccess: async (data) => {
-      console.log("success")
-      await mutationLogin.mutate(data)
-      // setCurrentUser(data.user)
-      // navigate("/")
-      // navigate("/")
+    onSuccess: (data) => {
+      mutationLogin.mutate(data)
     },
     onError: (err) => {
       console.log("err", err)
@@ -40,7 +36,9 @@ const Register = () => {
   })
 
   const handleClick = async (data) => {
-    await mutation.mutate(data)
+    await mutation.mutateAsync(data)
+    navigate("/")
+    window.location.reload()
   }
 
   return (

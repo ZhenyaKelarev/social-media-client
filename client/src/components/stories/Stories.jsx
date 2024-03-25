@@ -59,8 +59,6 @@ const Stories = ({ userId }) => {
         className="mySwiper"
         spaceBetween={20}
         slidesPerView={5}
-        onSlideChange={() => console.log("slide change")}
-        onSwiper={(swiper) => console.log(swiper)}
       >
         {stories?.map((story) => (
           <SwiperSlide className="story" key={story.id}>

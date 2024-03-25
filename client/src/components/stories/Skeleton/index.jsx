@@ -12,7 +12,7 @@ const StoriesSkeleton = () => {
       <Skeleton className="skeleton-avatar" />
       <div className="stories">
         {[...Array(CARD_LENGTH).keys()].map((key, index) => (
-          <Skeleton className="skeleton-story" />
+          <Skeleton key={key} className="skeleton-story" />
         ))}
       </div>
     </div>

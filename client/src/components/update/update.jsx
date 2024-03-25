@@ -35,7 +35,7 @@ function Update({ setOpenUpdate, user }) {
       profilePic: profileUrl,
     }
 
-    updateProfile.mutate(
+    await updateProfile.mutate(
       {
         ...texts,
         coverPic: coverUrl,
@@ -43,9 +43,8 @@ function Update({ setOpenUpdate, user }) {
       },
       {
         onSuccess: () => {
-          console.log("work")
-          // setCurrentUser(updatedUser)
-          // localStorage.setItem("user", JSON.stringify(updatedUser))
+          setCurrentUser(updatedUser)
+          localStorage.setItem("user", JSON.stringify(updatedUser))
         },
         onError: () => {
           console.log("error")

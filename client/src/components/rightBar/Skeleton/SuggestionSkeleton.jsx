@@ -6,13 +6,13 @@ import "../rightBar.scss"
 
 import React from "react"
 
-const CARD_LENGTH = 3
+const CARD_LENGTH = 2
 
 const SuggestionSkeleton = () => {
   return (
     <div className="suggestion-skeleton item">
       {[...Array(CARD_LENGTH).keys()].map((key, index) => (
-        <div className="user">
+        <div key={key} className="user">
           <div className="userInfo">
             <Skeleton className="skeleton-avatar" />
             <Skeleton className="skeleton-name" />

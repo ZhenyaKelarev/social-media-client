@@ -7,18 +7,7 @@ import Loader from "../Loader"
 import "./posts.scss"
 
 const Posts = ({ userId }) => {
-  const onSuccess = (data) => {
-    console.log("success data", data)
-  }
-
-  const onError = (error) => {
-    console.log("error data", error)
-  }
-  const {
-    data: posts,
-    isLoading,
-    isError,
-  } = useGetPosts(userId, onSuccess, onError)
+  const { data: posts, isLoading, isError } = useGetPosts(userId)
 
   if (isLoading) return <Loader />
 

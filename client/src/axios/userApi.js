@@ -7,9 +7,6 @@ const loginUser = async ({ username, password }) => {
     .then((data) => {
       localStorage.setItem("accessToken", data.accessToken)
       localStorage.setItem("user", JSON.stringify(data.user))
-      if (data.accessToken) {
-        window.location.href = "/"
-      }
       return data
     })
     .catch((e) => e.message)
