@@ -2,6 +2,8 @@ import Post from "../post/Post"
 import { useQuery } from "@tanstack/react-query"
 import { makeRequest } from "../../axios"
 import { useGetPosts } from "./Services/queries"
+import Loader from "../Loader"
+
 import "./posts.scss"
 
 const Posts = ({ userId }) => {
@@ -18,7 +20,7 @@ const Posts = ({ userId }) => {
     isError,
   } = useGetPosts(userId, onSuccess, onError)
 
-  if (isLoading) return <h1>Loading...</h1>
+  if (isLoading) return <Loader />
 
   if (isError) return <h1>Something went wrong</h1>
 
