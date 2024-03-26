@@ -13,7 +13,6 @@ const upload = async (file) => {
 }
 
 const getImage = (fileName) => {
-  console.log("fileName", fileName)
   const imagePath = fileName ? `/upload/${fileName}` : DefaultAvatar
   return imagePath
 }

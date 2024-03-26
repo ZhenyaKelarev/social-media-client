@@ -91,11 +91,11 @@ const Profile = () => {
             <div className="info">
               <div className="item">
                 <PlaceIcon />
-                <span>{data.city}</span>
+                <span>{data.city || "no location"}</span>
               </div>
               <div className="item">
                 <LanguageIcon />
-                <span>{data.website}</span>
+                <span>{data.website || "no website"}</span>
               </div>
             </div>
             {userId === currentUser.id ? (

@@ -36,7 +36,7 @@ const Register = () => {
         window.location.reload()
       },
       onError: (err) => {
-        console.log("err", err)
+        setErr(err.response.data)
       },
     })
   }

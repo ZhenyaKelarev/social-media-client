@@ -51,15 +51,6 @@ makeRequest.interceptors.response.use(
         // console.log("err", err)
       }
     }
-
-    // if (error.response.status === 409) {
-    //   // return Promise.reject(error)
-    //   try {
-    //     console.log("true")
-    //   } catch (err) {
-    //     return Promise.reject(err)
-    //   }
-    // }
     if (error.response.status === 409 && !originalRequest._retry) {
       originalRequest._retry = true
       try {
