@@ -14,6 +14,7 @@ import { DarkModeContext } from "../../context/darkModeContext"
 import { AuthContext } from "../../context/authContext"
 import { useMutation } from "@tanstack/react-query"
 import { makeRequest } from "../../axios"
+import { getImage } from "utils/fileManipulation"
 
 const Navbar = () => {
   const { toggle, darkMode } = useContext(DarkModeContext)
@@ -57,7 +58,7 @@ const Navbar = () => {
         <ExitToAppIcon onClick={handleExit} className="icon-button" />
         <NotificationsOutlinedIcon />
         <div className="user">
-          <img src={"/upload/" + currentUser.profilePic} alt="" />
+          <img src={getImage(currentUser.profilePic)} alt="" />
           <span>{currentUser.name}</span>
         </div>
       </div>

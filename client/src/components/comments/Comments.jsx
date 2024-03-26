@@ -2,6 +2,7 @@ import { useContext, useState } from "react"
 import "./comments.scss"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { AuthContext } from "../../context/authContext"
+import { getImage } from "utils/fileManipulation"
 
 import { makeRequest } from "../../axios"
 import moment from "moment"
@@ -45,7 +46,7 @@ const Comments = ({ postId }) => {
   return (
     <div className="comments">
       <div className="write">
-        <img src={"/upload/" + currentUser.profilePic} alt="" />
+        <img src={getImage(currentUser.profilePic)} alt="" />
         <input
           value={desc}
           type="text"
@@ -56,7 +57,7 @@ const Comments = ({ postId }) => {
       </div>
       {comments.map((comment) => (
         <div className="comment">
-          <img src={"/upload/" + comment.profilePic} alt="" />
+          <img src={getImage(comment.profilePic)} alt="" />
           <div className="info">
             <span>{comment.name}</span>
             <p>{comment.desc}</p>

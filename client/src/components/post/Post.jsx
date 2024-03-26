@@ -12,6 +12,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { makeRequest } from "../../axios"
 import { AuthContext } from "../../context/authContext"
 import authRoute from "../../axios/userApi"
+import { getImage } from "utils/fileManipulation"
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false)
@@ -79,7 +80,7 @@ const Post = ({ post }) => {
       <div className="container">
         <div className="user">
           <div className="userInfo">
-            <img src={"/upload/" + post.profilePic} alt="" />
+            <img src={getImage(post.profilePic)} alt="" />
             <div className="details">
               <Link
                 to={`/profile/${post.userId}`}
@@ -104,7 +105,7 @@ const Post = ({ post }) => {
         </div>
         <div className="content">
           <p>{post.desc}</p>
-          <img src={"/upload/" + post.img} alt="" />
+          <img src={getImage(post.img)} alt="" />
         </div>
         <div className="info">
           <div className="item">

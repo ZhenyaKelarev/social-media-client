@@ -1,16 +1,13 @@
 import "./rightBar.scss"
 import { useContext } from "react"
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { makeRequest } from "axios.js"
 import { AuthContext } from "../../context/authContext"
-import {
-  SkeletonButton,
-  SuggestionSkeleton,
-} from "./Skeleton/SuggestionSkeleton"
+import { getImage } from "utils/fileManipulation"
+import { SuggestionSkeleton } from "./Skeleton/SuggestionSkeleton"
 import Suggestions from "./components/Suggestions"
 
 const RightBar = () => {
-  const queryClient = useQueryClient()
   const { currentUser } = useContext(AuthContext)
 
   const userId = currentUser.id
@@ -93,14 +90,7 @@ const RightBar = () => {
               return (
                 <div key={friend.id} className="user">
                   <div className="userInfo">
-                    <img
-                      src={
-                        friend.profilePic
-                          ? "/upload/" + friend.profilePic
-                          : "/upload/defaultAvatar.jpeg"
-                      }
-                      alt="avatar"
-                    />
+                    <img src={getImage(friend.profilePic)} alt="avatar" />
                     <div className="online" />
                     <span>{friend.name}</span>
                   </div>

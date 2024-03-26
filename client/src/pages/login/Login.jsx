@@ -29,6 +29,9 @@ const Login = () => {
       await setCurrentUser(data.user)
       navigate("/")
     },
+    onError: (err) => {
+      console.log("err", err)
+    },
   })
 
   const handleLogin = async (e) => {

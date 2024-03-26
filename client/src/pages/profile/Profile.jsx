@@ -16,6 +16,7 @@ import { AuthContext } from "../../context/authContext"
 import { useLocation } from "react-router-dom"
 import Update from "../../components/update/update"
 import ErrorMessage from "../../components/error"
+import { getImage } from "utils/fileManipulation"
 
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false)
@@ -63,8 +64,8 @@ const Profile = () => {
   return (
     <div className="profile">
       <div className="images">
-        <img src={"/upload/" + data.coverPic} alt="" className="cover" />
-        <img src={"/upload/" + data.profilePic} alt="" className="profilePic" />
+        <img src={getImage(data.coverPic)} alt="" className="cover" />
+        <img src={getImage(data.profilePic)} alt="" className="profilePic" />
       </div>
       <div className="profileContainer">
         <div className="uInfo">

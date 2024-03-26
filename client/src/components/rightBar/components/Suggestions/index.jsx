@@ -4,6 +4,7 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
 import { makeRequest } from "axios.js"
 import { AuthContext } from "../../../../context/authContext"
 import "../../rightBar.scss"
+import { getImage } from "utils/fileManipulation"
 
 import {
   SkeletonButton,
@@ -68,14 +69,7 @@ const Suggestions = () => {
         return (
           <div key={user.id} className="user">
             <div className="userInfo">
-              <img
-                src={
-                  user.profilePic
-                    ? "/upload/" + user.profilePic
-                    : "/upload/defaultAvatar.jpeg"
-                }
-                alt="default avatar"
-              />
+              <img src={getImage(user.profilePic)} alt="default avatar" />
               <span>{user.name}</span>
             </div>
             <div className="buttons">

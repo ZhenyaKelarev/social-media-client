@@ -65,7 +65,7 @@ export const deletePost = (req, res) => {
 
     db.query(q, [req.params.id, userInfo.id], (err, data) => {
       if (err) return res.status(500).json(err)
-      if (data.affectedRows > 0) return res.status(200).json()
+      if (data.affectedRows > 0) return res.status(200).json("Post deleted")
       return res.status(403).json("You can delete only your post")
     })
   })
