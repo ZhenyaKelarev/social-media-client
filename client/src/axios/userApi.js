@@ -40,18 +40,6 @@ const getUserInfo = async () => {
   return result
 }
 
-const deletePost = async (postId, config) => {
-  try {
-    const response = await makeRequest.delete("/posts/" + postId, config)
-    const data = response.data
-
-    return data
-  } catch (error) {
-    console.error("Error occurred while delete post:", error)
-    throw error
-  }
-}
-
 const addPost = async (newPost) => {
   const result = await makeRequest
     .post("/posts", newPost)
@@ -73,7 +61,6 @@ const authRoute = {
   loginUser,
   registerUser,
   getUserInfo,
-  deletePost,
   addPost,
   // tokenization,
 }

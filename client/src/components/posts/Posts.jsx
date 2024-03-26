@@ -1,6 +1,4 @@
 import Post from "../post/Post"
-import { useQuery } from "@tanstack/react-query"
-import { makeRequest } from "../../axios"
 import { useGetPosts } from "./Services/queries"
 import Loader from "../Loader"
 

@@ -9,6 +9,7 @@ import { upload } from "../../utils/fileManipulation"
 import { getImage } from "../../utils/fileManipulation"
 
 const Share = () => {
+  const { currentUser } = useContext(AuthContext)
   const [file, setFile] = useState(null)
   const [desc, setDesc] = useState("")
 
@@ -22,8 +23,6 @@ const Share = () => {
     setDesc("")
     setFile(null)
   }
-
-  const { currentUser } = useContext(AuthContext)
 
   return (
     <div className="share">
