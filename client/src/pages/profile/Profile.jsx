@@ -24,7 +24,7 @@ const Profile = () => {
   const userId = parseInt(useLocation().pathname.split("/")[2])
 
   const { isLoading, data, isError, error } = useQuery({
-    queryKey: ["user"],
+    queryKey: ["user", userId],
     queryFn: () =>
       makeRequest.get("/users/find/" + userId).then((res) => res.data),
   })
@@ -48,8 +48,9 @@ const Profile = () => {
       return makeRequest.post("/relationships", { userId })
     },
     onSuccess: () => {
-      // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ["relationship"] })
+      queryClient.invalidateQueries({ queryKey: ["allFriends"] })
+      queryClient.invalidateQueries({ queryKey: ["allUsers"] })
     },
   })
 
