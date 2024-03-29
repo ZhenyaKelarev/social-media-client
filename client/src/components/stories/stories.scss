@@ -16,9 +16,11 @@
     height: 150px;
     gap: 20px;
   }
-
+  .add-story {
+    min-width: 170px;
+  }
   .story {
-    flex: 1;
+    // flex: 1;
     border-radius: 10px;
     overflow: hidden;
     position: relative;
@@ -73,5 +75,27 @@
         margin: auto;
       }
     }
+  }
+  .swiper {
+    width: 600px;
+  }
+
+  .swiper-button-prev:after,
+  .swiper-rtl .swiper-button-next:after,
+  .swiper-button-next:after,
+  .swiper-rtl .swiper-button-prev:after {
+    width: 20px;
+    height: 20px;
+    font-size: 17px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .swiper-button-prev,
+  .swiper-button-next {
+    background: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
   }
 }

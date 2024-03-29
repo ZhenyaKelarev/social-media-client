@@ -8,69 +8,40 @@ import { Link } from "react-router-dom"
 import Comments from "../comments/Comments"
 import { useState, useContext } from "react"
 import moment from "moment"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { makeRequest } from "../../axios"
 import { AuthContext } from "../../context/authContext"
-import authRoute from "../../axios/userApi"
+import {
+  useDeletePost,
+  useAddDeleteLike,
+  useGetComments,
+  useGetLikes,
+} from "./Services/queries"
+import { getImage } from "utils/fileManipulation"
 
 const Post = ({ post }) => {
+  const { currentUser } = useContext(AuthContext)
   const [commentOpen, setCommentOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
 
-  const { currentUser } = useContext(AuthContext)
+  const { data, isLoading, isError } = useGetLikes(post.id)
+  const { data: commentsData, isLoading: isCommentsLoading } = useGetComments(
+    post.id
+  )
 
-  const { isLoading, isError, data } = useQuery({
-    queryKey: ["likes", post.id],
-    queryFn: () =>
-      makeRequest.get("/likes?postId=" + post.id).then((res) => res.data),
-  })
+  const deletePost = useDeletePost()
+  const addDeleteLike = useAddDeleteLike()
 
-  const { isLoading: isCommentsLoading, data: comments } = useQuery({
-    queryKey: ["comments", post.id],
-    queryFn: () =>
-      makeRequest.get("/comments?postId=" + post.id).then((res) => res.data),
-  })
-
-  const queryClient = useQueryClient()
-
-  const mutation = useMutation({
-    mutationFn: (liked) => {
-      if (liked) return makeRequest.delete("/likes?postId=" + post.id)
-      return makeRequest.post("/likes", { postId: post.id })
-    },
-    onSuccess: () => {
-      // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ["likes"] })
-    },
-  })
-
-  const deleteMutation = useMutation({
-    mutationFn: (postId) => {
-      return authRoute.deletePost(postId)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] })
-    },
-  })
-
-  // const deleteMutation = useMutation({
-  //   mutationFn: (postId) => {
-  //     return makeRequest.delete("/posts/" + postId)
-  //   },
-  //   onSuccess: () => {
-  //     // Invalidate and refetch
-  //     queryClient.invalidateQueries({ queryKey: ["posts"] })
-  //   },
-  // })
   const handleLike = () => {
-    mutation.mutate(data.includes(currentUser.id))
+    addDeleteLike.mutate({
+      liked: data.includes(currentUser.id),
+      postId: post.id,
+    })
   }
 
   const handleDelete = () => {
-    deleteMutation.mutate(post.id)
+    deletePost.mutate(post.id)
   }
 
-  if (isLoading || isCommentsLoading) return <h1>Loading...</h1>
+  if (isLoading || isCommentsLoading) return null
 
   if (isError) return <h1>Something went wrong</h1>
 
@@ -79,13 +50,13 @@ const Post = ({ post }) => {
       <div className="container">
         <div className="user">
           <div className="userInfo">
-            <img src={"/upload/" + post.profilePic} alt="" />
+            <img src={getImage(post.user.profilePic)} alt="" />
             <div className="details">
               <Link
                 to={`/profile/${post.userId}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
-                <span className="name">{post.name}</span>
+                <span className="name">{post.user.name}</span>
               </Link>
               <span className="date">{moment(post.createdAt).fromNow()}</span>
             </div>
@@ -104,30 +75,30 @@ const Post = ({ post }) => {
         </div>
         <div className="content">
           <p>{post.desc}</p>
-          <img src={"/upload/" + post.img} alt="" />
+          <img src={post.img && getImage(post.img)} alt="" />
         </div>
         <div className="info">
           <div className="item">
             {data.includes(currentUser.id) ? (
               <FavoriteOutlinedIcon
                 style={{ color: "red" }}
-                onClick={handleLike}
+                onClick={() => handleLike(post.id)}
               />
             ) : (
               <FavoriteBorderOutlinedIcon onClick={handleLike} />
             )}
-            {data.length} likes
+            {data?.length} likes
           </div>
           <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
             <TextsmsOutlinedIcon />
-            {comments.length} Comments
+            {commentsData?.length} Comments
           </div>
           <div className="item">
             <ShareOutlinedIcon />
             Share
           </div>
         </div>
-        {commentOpen && <Comments postId={post.id} />}
+        {commentOpen && <Comments data={commentsData} postId={post.id} />}
       </div>
     </div>
   )

@@ -1,4 +1,5 @@
 import { makeRequest } from "../axios"
+import DefaultAvatar from "../assets/defaultAvatar.jpeg"
 
 const upload = async (file) => {
   try {
@@ -11,4 +12,9 @@ const upload = async (file) => {
   }
 }
 
-export { upload }
+const getImage = (fileName) => {
+  const imagePath = fileName ? `/upload/${fileName}` : DefaultAvatar
+  return imagePath
+}
+
+export { upload, getImage }

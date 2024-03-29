@@ -1,51 +1,26 @@
 import { useContext, useState } from "react"
-import "./comments.scss"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { AuthContext } from "../../context/authContext"
-
-import { makeRequest } from "../../axios"
+import { getImage } from "utils/fileManipulation"
+import { useAddComment } from "components/post/Services/queries"
 import moment from "moment"
+import "./comments.scss"
 
-const Comments = ({ postId }) => {
+const Comments = ({ postId, data }) => {
   const { currentUser } = useContext(AuthContext)
   const [desc, setDesc] = useState("")
 
-  const {
-    isLoading,
-    isError,
-    data: comments,
-  } = useQuery({
-    queryKey: ["comments", postId],
-    queryFn: () =>
-      makeRequest.get("/comments?postId=" + postId).then((res) => res.data),
-  })
-
-  const queryClient = useQueryClient()
-
-  const mutation = useMutation({
-    mutationFn: (newComment) => {
-      return makeRequest.post("/comments", newComment)
-    },
-    onSuccess: () => {
-      // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ["comments"] })
-    },
-  })
+  const addComment = useAddComment()
 
   const handleClick = async (e) => {
     e.preventDefault()
-    mutation.mutate({ desc, postId })
+    addComment.mutate({ desc, postId })
     setDesc("")
   }
-
-  if (isLoading) return <h1>Loading...</h1>
-
-  if (isError) return <h1>Something went wrong</h1>
 
   return (
     <div className="comments">
       <div className="write">
-        <img src={"/upload/" + currentUser.profilePic} alt="" />
+        <img src={getImage(currentUser.profilePic)} alt="avatar" />
         <input
           value={desc}
           type="text"
@@ -54,11 +29,11 @@ const Comments = ({ postId }) => {
         />
         <button onClick={handleClick}>Send</button>
       </div>
-      {comments.map((comment) => (
-        <div className="comment">
-          <img src={"/upload/" + comment.profilePic} alt="" />
+      {data.map((comment) => (
+        <div key={comment.id} className="comment">
+          <img src={getImage(comment.user.profilePic)} alt="" />
           <div className="info">
-            <span>{comment.name}</span>
+            <span>{comment.user.name}</span>
             <p>{comment.desc}</p>
           </div>
           <span className="date">{moment(comment.createdAt).fromNow()}</span>

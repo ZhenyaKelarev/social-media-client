@@ -3,6 +3,7 @@ import React, { useState, useContext } from "react"
 import { AuthContext } from "../../context/authContext"
 import { upload } from "../../utils/fileManipulation"
 import { useUpdateProfilePut } from "../../pages/profile/Services/queries"
+import { getImage } from "../../utils/fileManipulation"
 
 function Update({ setOpenUpdate, user }) {
   const { currentUser, setCurrentUser } = useContext(AuthContext)
@@ -35,7 +36,7 @@ function Update({ setOpenUpdate, user }) {
       profilePic: profileUrl,
     }
 
-    updateProfile.mutate(
+    await updateProfile.mutateAsync(
       {
         ...texts,
         coverPic: coverUrl,
@@ -43,9 +44,12 @@ function Update({ setOpenUpdate, user }) {
       },
       {
         onSuccess: () => {
-          console.log("updatedUser", updatedUser)
-          // setCurrentUser(updatedUser)
-          // localStorage.setItem("user", JSON.stringify(updatedUser))
+          setOpenUpdate(false)
+          setCurrentUser(updatedUser)
+          localStorage.setItem("user", JSON.stringify(updatedUser))
+        },
+        onError: () => {
+          console.log("error")
         },
       }
     )
@@ -64,9 +68,7 @@ function Update({ setOpenUpdate, user }) {
               <div className="imgContainer">
                 <img
                   src={
-                    cover
-                      ? URL.createObjectURL(cover)
-                      : "/upload/" + user.coverPic
+                    cover ? URL.createObjectURL(cover) : getImage(user.coverPic)
                   }
                   alt=""
                 />
@@ -85,7 +87,7 @@ function Update({ setOpenUpdate, user }) {
                   src={
                     profile
                       ? URL.createObjectURL(profile)
-                      : "/upload/" + user.profilePic
+                      : getImage(user.profilePic)
                   }
                   alt=""
                 />

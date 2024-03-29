@@ -15,14 +15,16 @@ import { makeRequest } from "../../axios"
 import { AuthContext } from "../../context/authContext"
 import { useLocation } from "react-router-dom"
 import Update from "../../components/update/update"
+import ErrorMessage from "../../components/error"
+import { getImage } from "utils/fileManipulation"
 
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false)
   const { currentUser } = useContext(AuthContext)
   const userId = parseInt(useLocation().pathname.split("/")[2])
 
-  const { isLoading, data } = useQuery({
-    queryKey: ["user"],
+  const { isLoading, data, isError, error } = useQuery({
+    queryKey: ["user", userId],
     queryFn: () =>
       makeRequest.get("/users/find/" + userId).then((res) => res.data),
   })
@@ -46,8 +48,9 @@ const Profile = () => {
       return makeRequest.post("/relationships", { userId })
     },
     onSuccess: () => {
-      // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ["relationship"] })
+      queryClient.invalidateQueries({ queryKey: ["allFriends"] })
+      queryClient.invalidateQueries({ queryKey: ["allUsers"] })
     },
   })
 
@@ -57,11 +60,13 @@ const Profile = () => {
 
   if (isLoading || relationshipIsLoading) return <h1>Loading...</h1>
 
+  if (isError) return <ErrorMessage message={error.response.data} />
+
   return (
     <div className="profile">
       <div className="images">
-        <img src={"/upload/" + data.coverPic} alt="" className="cover" />
-        <img src={"/upload/" + data.profilePic} alt="" className="profilePic" />
+        <img src={getImage(data.coverPic)} alt="" className="cover" />
+        <img src={getImage(data.profilePic)} alt="" className="profilePic" />
       </div>
       <div className="profileContainer">
         <div className="uInfo">
@@ -87,11 +92,11 @@ const Profile = () => {
             <div className="info">
               <div className="item">
                 <PlaceIcon />
-                <span>{data.city}</span>
+                <span>{data.city || "no location"}</span>
               </div>
               <div className="item">
                 <LanguageIcon />
-                <span>{data.website}</span>
+                <span>{data.website || "no website"}</span>
               </div>
             </div>
             {userId === currentUser.id ? (

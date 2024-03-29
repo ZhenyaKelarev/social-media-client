@@ -1,4 +1,4 @@
-import { makeRequest } from "../../../axios"
+import { makeRequest } from "axios.js"
 
 const updateUser = async (user) => {
   const result = await makeRequest

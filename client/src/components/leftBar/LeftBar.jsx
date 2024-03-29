@@ -14,6 +14,7 @@ import Courses from "../../assets/12.png"
 import Fund from "../../assets/13.png"
 import { AuthContext } from "../../context/authContext"
 import { useContext } from "react"
+import { getImage } from "utils/fileManipulation"
 
 const LeftBar = () => {
   const { currentUser } = useContext(AuthContext)
@@ -23,7 +24,7 @@ const LeftBar = () => {
       <div className="container">
         <div className="menu">
           <div className="user">
-            <img src={"/upload/" + currentUser.profilePic} alt="" />
+            <img src={getImage(currentUser.profilePic)} alt="" />
             <span>{currentUser.name}</span>
           </div>
           <div className="item">

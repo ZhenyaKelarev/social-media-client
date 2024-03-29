@@ -6,8 +6,6 @@
 // })
 
 import axios from "axios"
-// import authRoute from "./axios/userApi"
-import router from "./App"
 
 export const makeRequest = axios.create({
   baseURL: "http://localhost:8800/api/",
@@ -35,7 +33,7 @@ makeRequest.interceptors.response.use(
   (response) => {
     return response
   },
-  async (error) => {
+  (error) => {
     const originalRequest = error.config
     // if (
     //   error.response.status === 401 &&
@@ -50,9 +48,18 @@ makeRequest.interceptors.response.use(
         return makeRequest(originalRequest)
       } catch (err) {
         return Promise.reject(err)
+        // console.log("err", err)
       }
     }
-    await router.push("/login")
+    if (error.response.status === 409 && !originalRequest._retry) {
+      originalRequest._retry = true
+      try {
+        return makeRequest(originalRequest)
+      } catch (err) {
+        return Promise.reject(err)
+        // console.log("err", err)
+      }
+    }
     return Promise.reject(error)
   }
 )

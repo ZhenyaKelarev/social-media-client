@@ -1,48 +1,57 @@
-import { db } from "../connect.js"
 import jwt from "jsonwebtoken"
+import { PrismaClient } from "@prisma/client"
+const prisma = new PrismaClient()
 
-export const getRelationships = (req, res) => {
-  const q = "SELECT followerUserId FROM relationships WHERE followedUserId = ?"
-
-  db.query(q, [req.query.followedUserId], (err, data) => {
-    if (err) return res.status(500).json(err)
+export const getRelationships = async (req, res) => {
+  try {
+    const { followedUserId } = req.query
+    const followerUsers = await prisma.relationship.findMany({
+      where: {
+        followedUserId: Number(followedUserId),
+      },
+    })
     return res
       .status(200)
-      .json(data.map((relationship) => relationship.followerUserId))
-  })
+      .json(followerUsers.map((relationship) => relationship.followerUserId))
+  } catch (error) {
+    return res.status(500).json(error)
+  }
 }
 
-export const addRelationship = (req, res) => {
+export const addRelationship = async (req, res) => {
   const token = req.headers.authorization
   if (!token) return res.status(401).json("Not logged in!")
 
-  jwt.verify(token, "secretkey", (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!")
-
-    const q =
-      "INSERT INTO relationships (`followerUserId`,`followedUserId`) VALUES (?)"
-    const values = [userInfo.id, req.body.userId]
-
-    db.query(q, [values], (err, data) => {
-      if (err) return res.status(500).json(err)
-      return res.status(200).json("Following")
+  try {
+    const userInfo = jwt.verify(token, "secretkey")
+    await prisma.relationship.create({
+      data: {
+        followerUserId: userInfo.id,
+        followedUserId: req.body.userId,
+      },
     })
-  })
+
+    return res.status(200).json("Following")
+  } catch (error) {
+    return res.status(500).json(err)
+  }
 }
 
-export const deleteRelationship = (req, res) => {
+export const deleteRelationship = async (req, res) => {
   const token = req.headers.authorization
   if (!token) return res.status(401).json("Not logged in!")
 
-  jwt.verify(token, "secretkey", (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!")
-
-    const q =
-      "DELETE FROM relationships WHERE `followerUserId` = ? AND `followedUserId` = ?"
-
-    db.query(q, [userInfo.id, req.query.userId], (err, data) => {
-      if (err) return res.status(500).json(err)
-      return res.status(200).json("Unfollow")
+  try {
+    const userInfo = jwt.verify(token, "secretkey")
+    await prisma.relationship.deleteMany({
+      where: {
+        followerUserId: userInfo.id,
+        followedUserId: Number(req.query.userId),
+      },
     })
-  })
+
+    return res.status(200).json("Unfollow")
+  } catch (error) {
+    return res.status(500).json(err)
+  }
 }

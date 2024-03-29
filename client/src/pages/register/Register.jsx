@@ -1,8 +1,7 @@
-import { Link, redirect, useNavigate } from "react-router-dom"
-import { useState, useContext } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { useState } from "react"
 import "./register.scss"
 import { useForm } from "react-hook-form"
-import axios from "axios"
 import { useMutation } from "@tanstack/react-query"
 import authRoute from "../../axios/userApi"
 
@@ -13,33 +12,40 @@ const Register = () => {
     formState: { errors },
   } = useForm()
 
+  const navigate = useNavigate()
+
   const [err, setErr] = useState(null)
+
+  const mutationLogin = useMutation({
+    mutationFn: (inputs) => {
+      return authRoute.loginUser(inputs)
+    },
+  })
 
   const mutation = useMutation({
     mutationFn: (formData) => {
       return authRoute.registerUser(formData)
     },
-    onError: (err) => {
-      console.log("err", err)
-    },
-    onSuccess: (data) => {
-      console.log("success", data)
-      // await mutationLogin.mutate(data)
-      // setCurrentUser(data.user)
-      // navigate("/")
-      // navigate("/")
-    },
   })
 
-  const handleClick = async (data) => {
-    await mutation.mutate(data)
+  const handleClick = (data) => {
+    mutation.mutate(data, {
+      onSuccess: async (data) => {
+        await mutationLogin.mutateAsync(data)
+        navigate("/")
+        window.location.reload()
+      },
+      onError: (err) => {
+        setErr(err.response.data)
+      },
+    })
   }
 
   return (
     <div className="register">
       <div className="card">
         <div className="left">
-          <h1>Lama Social.</h1>
+          <h1>Fakebook</h1>
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero cum,
             alias totam numquam ipsa exercitationem dignissimos, error nam,

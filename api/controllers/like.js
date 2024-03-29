@@ -1,44 +1,64 @@
-import { db } from "../connect.js"
 import jwt from "jsonwebtoken"
+import { PrismaClient } from "@prisma/client"
+const prisma = new PrismaClient()
 
-export const getLikes = (req, res) => {
-  const q = "SELECT userId FROM likes WHERE postId = ?"
+export const getLikes = async (req, res) => {
+  try {
+    // Find likes for the specified post ID
+    const likes = await prisma.like.findMany({
+      where: {
+        postId: Number(req.query.postId),
+      },
+      select: {
+        userId: true,
+      },
+    })
 
-  db.query(q, [req.query.postId], (err, data) => {
-    if (err) return res.status(500).json(err)
-    return res.status(200).json(data.map((like) => like.userId))
-  })
+    // Extract user IDs from likes
+    const userIds = likes.map((like) => like.userId)
+
+    return res.status(200).json(userIds)
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
 }
 
-export const addLike = (req, res) => {
+export const addLike = async (req, res) => {
   const token = req.headers.authorization
+
   if (!token) return res.status(401).json("Not logged in!")
+  try {
+    const userInfo = jwt.verify(token, "secretkey")
 
-  jwt.verify(token, "secretkey", (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!")
-
-    const q = "INSERT INTO likes (`userId`,`postId`) VALUES (?)"
-    const values = [userInfo.id, req.body.postId]
-
-    db.query(q, [values], (err, data) => {
-      if (err) return res.status(500).json(err)
-      return res.status(200).json("Post has been liked.")
+    await prisma.like.create({
+      data: {
+        userId: Number(userInfo.id),
+        postId: Number(req.body.postId),
+      },
     })
-  })
+
+    return res.status(200).json("Post has been liked.")
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
 }
 
-export const deleteLike = (req, res) => {
+export const deleteLike = async (req, res) => {
   const token = req.headers.authorization
+
   if (!token) return res.status(401).json("Not logged in!")
+  try {
+    const userInfo = jwt.verify(token, "secretkey")
 
-  jwt.verify(token, "secretkey", (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!")
-
-    const q = "DELETE FROM likes WHERE `userId` = ? AND `postId` = ?"
-
-    db.query(q, [userInfo.id, req.query.postId], (err, data) => {
-      if (err) return res.status(500).json(err)
-      return res.status(200).json("Post has been disliked.")
+    await prisma.like.deleteMany({
+      where: {
+        userId: Number(userInfo.id),
+        postId: Number(req.query.postId),
+      },
     })
-  })
+
+    return res.status(200).json("Post has been disliked.")
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
 }

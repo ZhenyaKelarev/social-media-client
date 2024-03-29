@@ -1,7 +1,7 @@
 import "./style.scss"
 import React, { useState } from "react"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { makeRequest } from "../../../axios"
+import { makeRequest } from "axios.js"
+import { useAddStory } from "components/stories/Services/queries"
 
 function AddStory({ setOpenUpdate, userId }) {
   const [cover, setCover] = useState(null)
@@ -16,18 +16,7 @@ function AddStory({ setOpenUpdate, userId }) {
       console.log(err)
     }
   }
-
-  const queryClient = useQueryClient()
-
-  const mutation = useMutation({
-    mutationFn: (newStory) => {
-      return makeRequest.post("/stories", newStory)
-    },
-    onSuccess: () => {
-      // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ["stories"] })
-    },
-  })
+  const addStory = useAddStory()
 
   const handleClick = async (e) => {
     e.preventDefault()
@@ -35,7 +24,7 @@ function AddStory({ setOpenUpdate, userId }) {
 
     coverUrl = await upload(cover)
 
-    mutation.mutate({ img: coverUrl })
+    addStory.mutate({ img: coverUrl })
     setOpenUpdate(false)
   }
 

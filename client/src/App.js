@@ -50,6 +50,14 @@ function App() {
     return children
   }
 
+  const ProtectedLoginRoute = ({ children }) => {
+    if (token) {
+      return <Navigate to="/" replace />
+    }
+
+    return children
+  }
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -58,7 +66,6 @@ function App() {
           <Layout />
         </ProtectedRoute>
       ),
-      errorElement: <Page404 />,
       children: [
         {
           path: "/",
@@ -69,28 +76,37 @@ function App() {
           element: <Profile />,
         },
       ],
+      errorElement: <Page404 />,
     },
+
     {
       path: "/login",
       element: (
-        <QueryClientProvider client={queryClient}>
+        <ProtectedLoginRoute>
           <Login />
-        </QueryClientProvider>
+        </ProtectedLoginRoute>
       ),
     },
     {
       path: "/register",
       element: (
-        <QueryClientProvider client={queryClient}>
+        <ProtectedLoginRoute>
           <Register />
-        </QueryClientProvider>
+        </ProtectedLoginRoute>
       ),
+    },
+    {
+      path: "*",
+      element: <Page404 />,
+      errorElement: <Page404 />,
     },
   ])
 
   return (
     <div>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </div>
   )
 }

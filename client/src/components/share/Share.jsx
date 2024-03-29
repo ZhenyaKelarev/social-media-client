@@ -4,11 +4,12 @@ import Map from "../../assets/map.png"
 import Friend from "../../assets/friend.png"
 import { useContext, useState } from "react"
 import { AuthContext } from "../../context/authContext"
-import { makeRequest } from "../../axios"
 import { useAddNewPost } from "./Services"
 import { upload } from "../../utils/fileManipulation"
+import { getImage } from "../../utils/fileManipulation"
 
 const Share = () => {
+  const { currentUser } = useContext(AuthContext)
   const [file, setFile] = useState(null)
   const [desc, setDesc] = useState("")
 
@@ -23,14 +24,12 @@ const Share = () => {
     setFile(null)
   }
 
-  const { currentUser } = useContext(AuthContext)
-
   return (
     <div className="share">
       <div className="container">
         <div className="top">
           <div className="left">
-            <img src={"/upload/" + currentUser.profilePic} alt="" />
+            <img src={getImage(currentUser.profilePic)} alt="" />
             <input
               type="text"
               placeholder={`What's on your mind ${currentUser.name}?`}

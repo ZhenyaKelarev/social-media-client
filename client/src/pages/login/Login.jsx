@@ -11,7 +11,7 @@ const Login = () => {
     password: "",
   })
 
-  const [err] = useState(null)
+  const [err, setErr] = useState(null)
 
   const navigate = useNavigate()
 
@@ -28,6 +28,9 @@ const Login = () => {
     onSuccess: async (data) => {
       await setCurrentUser(data.user)
       navigate("/")
+    },
+    onError: (err) => {
+      setErr(err.response.data)
     },
   })
 
@@ -65,7 +68,7 @@ const Login = () => {
               onChange={handleChange}
               name="password"
             />
-            {err && err}
+            <p className="form-warning">{err}</p>
             <button onClick={handleLogin}>Login</button>
           </form>
         </div>

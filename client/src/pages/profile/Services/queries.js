@@ -8,6 +8,9 @@ const useUpdateProfilePut = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] })
     },
+    onError: (err) => {
+      console.log("err", err)
+    },
   })
 }
 

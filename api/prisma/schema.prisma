@@ -20,7 +20,7 @@ model Comment {
   userId    Int
   postId    Int
   user      User      @relation(fields: [userId], references: [id]) //ASK
-  post      Post      @relation(fields: [postId], references: [id]) //ASK
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade) //ASK
 }
 
 model User {
@@ -48,7 +48,7 @@ model Post {
   createdAt DateTime?
   userId    Int
   user      User      @relation(fields: [userId], references: [id]) //ASK
-  comment   Comment[] //ASK
+  comment   Comment[]
   likes     Like[]
 }
 
@@ -57,7 +57,7 @@ model Like {
   userId Int
   postId Int
   user   User @relation(fields: [userId], references: [id]) //ASK
-  post   Post @relation(fields: [postId], references: [id]) //ASK
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade) //ASK
 }
 
 model Relationship {
