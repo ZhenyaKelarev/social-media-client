@@ -20,7 +20,7 @@ const Comments = ({ postId, data }) => {
   return (
     <div className="comments">
       <div className="write">
-        <img src={getImage(currentUser.profilePic)} alt="" />
+        <img src={getImage(currentUser.profilePic)} alt="avatar" />
         <input
           value={desc}
           type="text"
@@ -31,9 +31,9 @@ const Comments = ({ postId, data }) => {
       </div>
       {data.map((comment) => (
         <div key={comment.id} className="comment">
-          <img src={getImage(comment.profilePic)} alt="" />
+          <img src={getImage(comment.user.profilePic)} alt="" />
           <div className="info">
-            <span>{comment.name}</span>
+            <span>{comment.user.name}</span>
             <p>{comment.desc}</p>
           </div>
           <span className="date">{moment(comment.createdAt).fromNow()}</span>

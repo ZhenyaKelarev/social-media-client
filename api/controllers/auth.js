@@ -1,4 +1,3 @@
-import { db } from "../connect.js"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 import { PrismaClient } from "@prisma/client"
@@ -48,17 +47,17 @@ export const login = async (req, res) => {
         username,
       },
     })
-    if (user.length === 0) return res.status(404).json("User not found!")
+    if (!user) return res.status(404).json("Wrong password or username")
     const checkPassword = bcrypt.compareSync(password, user.password)
     if (!checkPassword)
       return res.status(400).json("Wrong password or username")
+
     const accessToken = jwt.sign({ id: user.id }, "secretkey")
 
     const loginData = {
       accessToken,
       user,
     }
-    console.log("loginData", loginData)
     return res.status(200).json(loginData)
   } catch (err) {
     console.log(err)

@@ -1,57 +1,87 @@
-import { db } from "../connect.js"
 import jwt from "jsonwebtoken"
-import moment from "moment"
+import { PrismaClient } from "@prisma/client"
+const prisma = new PrismaClient()
 
-export const getStories = (req, res) => {
-  const userId = req.query.userId
-  const token = req.headers.authorization
-  if (!token) return res.status(401).json("Not logged in!")
+export const getStories = async (req, res) => {
+  try {
+    const userId = req.query.userId
+    const token = req.headers.authorization
 
-  jwt.verify(token, "secretkey", (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!")
+    if (!token) return res.status(401).json("Not logged in!")
+    const userInfo = jwt.verify(token, "secretkey")
+    if (!userInfo) return res.status(403).json("Token is not valid!")
 
-    const q = `SELECT s.*, u.id AS userId, name FROM stories AS s JOIN users AS u ON (u.id = s.userId) WHERE s.userId = ? ORDER BY s.id DESC`
-
-    const values =
-      userId !== "undefined" ? [userId] : [userInfo.id, userInfo.id]
-
-    db.query(q, values, (err, data) => {
-      if (err) return res.status(500).json(err)
-      return res.status(200).json(data)
+    const stories = await prisma.story.findMany({
+      where: {
+        userId: userId ? parseInt(userId) : userInfo.id,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        id: "desc",
+      },
     })
-  })
+
+    return res.status(200).json(stories)
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
 }
 
-export const addStory = (req, res) => {
-  const token = req.headers.authorization
-  if (!token) return res.status(401).json("Not logged in!")
+export const addStory = async (req, res) => {
+  try {
+    const token = req.headers.authorization
+    if (!token) return res.status(401).json("Not logged in!")
 
-  jwt.verify(token, "secretkey", (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!")
+    const userInfo = jwt.verify(token, "secretkey")
+    if (!userInfo) return res.status(403).json("Token is not valid!")
 
-    const q = "INSERT INTO stories (`img`, `userId`) VALUES (?)"
-
-    const values = [req.body.img, userInfo.id]
-    db.query(q, [values], (err, data) => {
-      if (err) return res.status(500).json(err)
-      return res.status(200).json("Post has been created")
+    // Create story using Prisma
+    const newStory = await prisma.story.create({
+      data: {
+        img: req.body.img,
+        userId: userInfo.id,
+      },
     })
-  })
+
+    return res.status(200).json("Story has been created")
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
 }
 
-export const deleteStory = (req, res) => {
-  const token = req.headers.authorization
-  if (!token) return res.status(401).json("Not logged in!")
+export const deleteStory = async (req, res) => {
+  try {
+    const token = req.headers.authorization
+    if (!token) return res.status(401).json("Not logged in!")
 
-  jwt.verify(token, "secretkey", (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!")
+    const userInfo = jwt.verify(token, "secretkey")
+    if (!userInfo) return res.status(403).json("Token is not valid!")
 
-    const q = "DELETE FROM posts WHERE `id`=? AND `userId`=?"
-
-    db.query(q, [req.params.id, userInfo.id], (err, data) => {
-      if (err) return res.status(500).json(err)
-      if (data.affectedRows > 0) return res.status(200).json()
-      return res.status(403).json("You can delete only your post")
+    // Find the story by ID
+    const story = await prisma.story.findFirst({
+      where: {
+        id: parseInt(req.params.id),
+        userId: userInfo.id,
+      },
     })
-  })
+
+    if (!story) return res.status(403).json("You can delete only your story")
+
+    await prisma.story.delete({
+      where: {
+        id: parseInt(req.params.id),
+      },
+    })
+
+    return res.status(200).json("Story has been deleted")
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
 }

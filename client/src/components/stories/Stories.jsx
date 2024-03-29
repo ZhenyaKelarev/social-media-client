@@ -65,7 +65,7 @@ const Stories = ({ userId }) => {
         {stories?.map((story) => (
           <SwiperSlide className="story" key={story.id}>
             <img src={"/upload/" + story.img} alt="" />
-            <span>{story.name}</span>
+            <span>{story.user.name}</span>
           </SwiperSlide>
         ))}
       </Swiper>
