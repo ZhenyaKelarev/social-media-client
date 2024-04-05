@@ -65,6 +65,6 @@ export const login = async (req, res) => {
   }
 }
 
-export const logout = (res) => {
+export const logout = (_, res) => {
   res.status(200).json("User has been log out")
 }

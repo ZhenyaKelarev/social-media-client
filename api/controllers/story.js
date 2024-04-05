@@ -43,7 +43,7 @@ export const addStory = async (req, res) => {
     if (!userInfo) return res.status(403).json("Token is not valid!")
 
     // Create story using Prisma
-    const newStory = await prisma.story.create({
+    await prisma.story.create({
       data: {
         img: req.body.img,
         userId: userInfo.id,
