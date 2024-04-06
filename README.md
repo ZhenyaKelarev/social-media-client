@@ -1,4 +1,4 @@
-# project-mgmt
+# Fakebook
 <p>
 <img src="./client/public/banner.png" alt="my banner">
 </p>
@@ -20,7 +20,7 @@
 
  <h1>🚀 Start project </h1>
 
-## Run mongodb - server side
+## Run server side
 open new terminal
 
 cd api

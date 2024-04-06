@@ -29,6 +29,8 @@ const Suggestions = () => {
         .then((res) => res.data),
   })
 
+  console.log("users", users)
+
   const { isLoading: relationshipIsLoading, data: relationshipData } = useQuery(
     {
       queryKey: ["relationship", userId],
@@ -47,11 +49,14 @@ const Suggestions = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["relationship"] })
+      queryClient.invalidateQueries({ queryKey: ["allUsers"] })
+      queryClient.invalidateQueries({ queryKey: ["allFriends"] })
     },
   })
 
   const handleFollow = (id) => {
     mutation.mutate(id)
+    // console.log("id", id)
   }
 
   if (usersIsLoading) return <SuggestionSkeleton />

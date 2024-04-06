@@ -74,9 +74,8 @@ export const getAllUnfollowUsers = async (req, res) => {
     const unfollowUsers = await prisma.user.findMany({
       where: {
         NOT: {
-          id: userId,
           id: {
-            in: followedUserIds,
+            in: [...followedUserIds, userId],
           },
         },
       },
