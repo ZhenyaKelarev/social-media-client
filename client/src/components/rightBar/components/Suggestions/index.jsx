@@ -60,14 +60,17 @@ const Suggestions = () => {
               {relationshipIsLoading ? (
                 <SkeletonButton />
               ) : (
-                <button onClick={() => handleFollow(user.id)}>
+                <button
+                  className="btn-primary"
+                  onClick={() => handleFollow(user.id)}
+                >
                   {relationshipData.includes(currentUser.id)
                     ? "Following"
                     : "Follow"}
                 </button>
               )}
 
-              <button>dismiss</button>
+              <button className="btn-warning">dismiss</button>
             </div>
           </div>
         )

@@ -1,24 +1,76 @@
 @import "../../../../style.scss";
 
-.friend-card {
-  @include themify($themes) {
-    text-decoration: none;
+.friend {
+  &-card {
+    @include themify($themes) {
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      position: relative;
+
+      margin-bottom: 20px;
+      background-color: themed("bgSoft");
+
+      .button {
+        border: none;
+        padding: 5px;
+        color: white;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        background-color: #5271ff;
+      }
+
+      .btn-warning {
+        background-color: #f0544f;
+      }
+
+      img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+      span {
+        color: themed("textColor");
+      }
+
+      a {
+        padding: 20px;
+        height: 100%;
+        width: 90%;
+        text-decoration: none;
+      }
+
+      .context-menu {
+        position: relative;
+        border: none;
+        background: transparent;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        padding-right: 20px;
+
+        &-window {
+          position: absolute;
+          top: 30px;
+          right: 20px;
+          width: 100px;
+          background: black;
+          display: flex;
+          flex-direction: column;
+          z-index: 1;
+        }
+      }
+    }
+  }
+  &-info {
     display: flex;
     align-items: center;
     gap: 20px;
-    position: relative;
-    padding: 20px;
-    margin-bottom: 20px;
-    background-color: themed("bgSoft");
-
-    img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-    span {
-      color: themed("textColor");
-    }
   }
 }
