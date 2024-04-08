@@ -4,9 +4,11 @@ import "./posts.scss"
 const Posts = ({ userId, posts }) => {
   return (
     <div className="posts">
-      {posts.map((post) => (
-        <Post post={post} key={post.id} />
-      ))}
+      {posts && posts.length !== 0 ? (
+        posts.map((post) => <Post post={post} key={post.id} />)
+      ) : (
+        <span>no posts</span>
+      )}
     </div>
   )
 }
