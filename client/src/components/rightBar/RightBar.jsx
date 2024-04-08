@@ -1,31 +1,8 @@
 import "./rightBar.scss"
-import { useContext } from "react"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { makeRequest } from "axios.js"
-import { AuthContext } from "../../context/authContext"
-import { getImage } from "utils/fileManipulation"
-import { SuggestionSkeleton } from "./Skeleton/SuggestionSkeleton"
 import Suggestions from "./components/Suggestions"
+import Friends from "./components/Friends"
 
 const RightBar = () => {
-  const { currentUser } = useContext(AuthContext)
-
-  const userId = currentUser.id
-
-  const {
-    isLoading: isFriendsIsLoading,
-    isError: isFriendsIsError,
-    data: friends,
-  } = useQuery({
-    queryKey: ["allFriends", userId],
-    queryFn: () =>
-      makeRequest
-        .get(`/users/allFriends?userId=${userId}`)
-        .then((res) => res.data),
-  })
-
-  if (isFriendsIsError) return <h1>error...</h1>
-
   return (
     <div className="rightBar">
       <div className="container">
@@ -81,24 +58,7 @@ const RightBar = () => {
             <span>1 min ago</span>
           </div>
         </div>
-        <div className="item">
-          <span>My Friends</span>
-          {isFriendsIsLoading ? (
-            <SuggestionSkeleton />
-          ) : (
-            friends?.map((friend) => {
-              return (
-                <div key={friend.id} className="user">
-                  <div className="userInfo">
-                    <img src={getImage(friend.profilePic)} alt="avatar" />
-                    <div className="online" />
-                    <span>{friend.name}</span>
-                  </div>
-                </div>
-              )
-            })
-          )}
-        </div>
+        <Friends />
       </div>
     </div>
   )

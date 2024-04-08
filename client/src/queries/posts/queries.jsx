@@ -7,6 +7,13 @@ const QUERY_KEYS = {
   COMMENTS: "comments",
 }
 
+const useGetPosts = (userId) => {
+  return useQuery({
+    queryKey: ["getPosts", userId],
+    queryFn: () => postRoute.getPosts(userId),
+  })
+}
+
 const useDeletePost = () => {
   const queryClient = useQueryClient()
   return useMutation({
@@ -17,10 +24,10 @@ const useDeletePost = () => {
   })
 }
 
-const useAddPost = () => {
+const useAddNewPost = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (postId) => postRoute.addPost(postId),
+    mutationFn: (newPost) => postRoute.addPost(newPost),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.POSTS] })
     },
@@ -65,8 +72,9 @@ const useAddComment = () => {
 }
 
 export {
+  useGetPosts,
   useDeletePost,
-  useAddPost,
+  useAddNewPost,
   useAddDeleteLike,
   useGetComments,
   useAddComment,

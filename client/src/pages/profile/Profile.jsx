@@ -17,35 +17,28 @@ import { useLocation } from "react-router-dom"
 import Update from "../../components/update/update"
 import ErrorMessage from "../../components/error"
 import { getImage } from "utils/fileManipulation"
+import { useGetRelations } from "queries/relation/queries"
+import { useGetUserInfo } from "queries/users/queries"
 
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false)
   const { currentUser } = useContext(AuthContext)
   const userId = parseInt(useLocation().pathname.split("/")[2])
 
-  const { isLoading, data, isError, error } = useQuery({
-    queryKey: ["user", userId],
-    queryFn: () =>
-      makeRequest.get("/users/find/" + userId).then((res) => res.data),
-  })
+  const { isLoading, data, isError, error } = useGetUserInfo(userId)
 
-  const { isLoading: relationshipIsLoading, data: relationshipData } = useQuery(
-    {
-      queryKey: ["relationship"],
-      queryFn: () =>
-        makeRequest
-          .get("/relationships?followedUserId=" + userId)
-          .then((res) => res.data),
-    }
-  )
+  const {
+    data: relationshipData,
+    isLoading: relationshipIsLoading,
+    isError: isRelationError,
+  } = useGetRelations(userId)
 
   const queryClient = useQueryClient()
 
   const mutation = useMutation({
-    mutationFn: (following) => {
-      if (following)
-        return makeRequest.delete("/relationships?userId=" + userId)
-      return makeRequest.post("/relationships", { userId })
+    mutationFn: ({ following, id }) => {
+      if (following) return makeRequest.delete("/relationships?userId=" + id)
+      return makeRequest.post("/relationships", { userId: id })
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["relationship"] })
@@ -55,12 +48,16 @@ const Profile = () => {
   })
 
   const handleFollow = () => {
-    mutation.mutate(relationshipData.includes(currentUser.id))
+    mutation.mutate({
+      following: relationshipData.includes(currentUser.id),
+      id: userId,
+    })
   }
 
   if (isLoading || relationshipIsLoading) return <h1>Loading...</h1>
 
-  if (isError) return <ErrorMessage message={error.response.data} />
+  if (isError || isRelationError)
+    return <ErrorMessage message={error.response.data} />
 
   return (
     <div className="profile">

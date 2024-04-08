@@ -10,7 +10,7 @@
     background-color: themed("bg");
     color: themed("textColor");
 
-    @include mobile{
+    @include mobile {
       display: none;
     }
 
@@ -32,6 +32,11 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
+
+        .nav-link {
+          text-decoration: none;
+          color: themed("textColor");
+        }
 
         span {
           font-size: 12px;

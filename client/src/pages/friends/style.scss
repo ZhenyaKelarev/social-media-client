@@ -1,2 +1,36 @@
+@import "../../style.scss";
 
+.friends-page {
+  min-height: 100%;
+  @include themify($themes) {
+    background-color: themed("bg");
+    padding: 20px;
 
+    h1 {
+      margin-bottom: 20px;
+      color: themed("textColor");
+    }
+
+    .item {
+      -webkit-box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.09);
+      -moz-box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.09);
+      box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.09);
+      padding: 20px;
+      margin-bottom: 20px;
+      background-color: themed("bg");
+    }
+  }
+  .userInfo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  }
+}

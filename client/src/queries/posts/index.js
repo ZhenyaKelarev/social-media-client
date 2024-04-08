@@ -1,6 +1,10 @@
 import { makeRequest } from "axios.js"
 import { performRequest } from "utils/request"
 
+const getPosts = async (userId) => {
+  return performRequest(makeRequest.get, `/posts?userId=${userId}`)
+}
+
 const deletePost = async (postId, config) => {
   return performRequest(makeRequest.delete, "/posts/" + postId, config)
 }
@@ -30,6 +34,7 @@ const addComment = async (newComment) => {
 }
 
 const postRoute = {
+  getPosts,
   deletePost,
   addPost,
   getLikes,

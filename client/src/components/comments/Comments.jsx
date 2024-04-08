@@ -1,7 +1,7 @@
 import { useContext, useState } from "react"
 import { AuthContext } from "../../context/authContext"
 import { getImage } from "utils/fileManipulation"
-import { useAddComment } from "components/post/Services/queries"
+import { useAddComment } from "queries/posts/queries"
 import moment from "moment"
 import "./comments.scss"
 

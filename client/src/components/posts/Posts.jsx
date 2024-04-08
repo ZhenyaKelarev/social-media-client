@@ -1,5 +1,5 @@
 import Post from "../post/Post"
-import { useGetPosts } from "./Services/queries"
+import { useGetPosts } from "queries/posts/queries"
 import Loader from "../Loader"
 
 import "./posts.scss"
