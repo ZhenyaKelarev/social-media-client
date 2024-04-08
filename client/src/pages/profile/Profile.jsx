@@ -19,6 +19,7 @@ import ErrorMessage from "../../components/error"
 import { getImage } from "utils/fileManipulation"
 import { useGetRelations } from "queries/relation/queries"
 import { useGetUserInfo } from "queries/users/queries"
+import { useGetUserPosts } from "queries/posts/queries"
 
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false)
@@ -26,6 +27,12 @@ const Profile = () => {
   const userId = parseInt(useLocation().pathname.split("/")[2])
 
   const { isLoading, data, isError, error } = useGetUserInfo(userId)
+
+  const {
+    data: posts,
+    isLoading: isPostsLoading,
+    isError: isPostsError,
+  } = useGetUserPosts(userId)
 
   const {
     data: relationshipData,
@@ -54,9 +61,10 @@ const Profile = () => {
     })
   }
 
-  if (isLoading || relationshipIsLoading) return <h1>Loading...</h1>
+  if (isLoading || relationshipIsLoading || isPostsLoading)
+    return <h1>Loading...</h1>
 
-  if (isError || isRelationError)
+  if (isError || isRelationError || isPostsError)
     return <ErrorMessage message={error.response.data} />
 
   return (
@@ -112,7 +120,7 @@ const Profile = () => {
           </div>
         </div>
 
-        <Posts userId={userId} />
+        <Posts userId={userId} posts={posts} />
       </div>
       {openUpdate && <Update setOpenUpdate={setOpenUpdate} user={data} />}
     </div>

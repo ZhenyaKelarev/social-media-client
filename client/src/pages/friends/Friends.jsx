@@ -27,7 +27,6 @@ const Friends = () => {
 
   if (isFriendsIsError) return <h1>error...</h1>
 
-  console.log("friends", friends)
   return (
     <div className="friends-page">
       <h1>Friends</h1>

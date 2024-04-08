@@ -48,7 +48,6 @@ makeRequest.interceptors.response.use(
         return makeRequest(originalRequest)
       } catch (err) {
         return Promise.reject(err)
-        // console.log("err", err)
       }
     }
     if (error.response.status === 409 && !originalRequest._retry) {
@@ -57,7 +56,6 @@ makeRequest.interceptors.response.use(
         return makeRequest(originalRequest)
       } catch (err) {
         return Promise.reject(err)
-        // console.log("err", err)
       }
     }
     return Promise.reject(error)

@@ -5,6 +5,10 @@ const getPosts = async (userId) => {
   return performRequest(makeRequest.get, `/posts?userId=${userId}`)
 }
 
+const getUserPosts = async (userId) => {
+  return performRequest(makeRequest.get, `/posts/userPosts?userId=${userId}`)
+}
+
 const deletePost = async (postId, config) => {
   return performRequest(makeRequest.delete, "/posts/" + postId, config)
 }
@@ -35,6 +39,7 @@ const addComment = async (newComment) => {
 
 const postRoute = {
   getPosts,
+  getUserPosts,
   deletePost,
   addPost,
   getLikes,
