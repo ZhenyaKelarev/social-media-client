@@ -1,6 +1,6 @@
 import React from "react"
 import { useContext } from "react"
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
+import { useQueryClient, useMutation } from "@tanstack/react-query"
 import { makeRequest } from "axios.js"
 import { AuthContext } from "context/authContext"
 import { getImage } from "utils/fileManipulation"
@@ -69,8 +69,6 @@ const Suggestions = () => {
                     : "Follow"}
                 </button>
               )}
-
-              <button className="btn-warning">dismiss</button>
             </div>
           </div>
         )

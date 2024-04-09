@@ -17,7 +17,7 @@ import { useLocation } from "react-router-dom"
 import Update from "../../components/update/update"
 import ErrorMessage from "../../components/error"
 import { getImage } from "utils/fileManipulation"
-import { useGetRelations } from "queries/relation/queries"
+import { useGetRelations, useFollowFriend } from "queries/relation/queries"
 import { useGetUserInfo } from "queries/users/queries"
 import { useGetUserPosts } from "queries/posts/queries"
 
@@ -40,24 +40,12 @@ const Profile = () => {
     isError: isRelationError,
   } = useGetRelations(userId)
 
-  const queryClient = useQueryClient()
-
-  const mutation = useMutation({
-    mutationFn: ({ following, id }) => {
-      if (following) return makeRequest.delete("/relationships?userId=" + id)
-      return makeRequest.post("/relationships", { userId: id })
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["relationship"] })
-      queryClient.invalidateQueries({ queryKey: ["allFriends"] })
-      queryClient.invalidateQueries({ queryKey: ["allUsers"] })
-    },
-  })
+  const followFriend = useFollowFriend()
 
   const handleFollow = () => {
-    mutation.mutate({
+    followFriend.mutate({
       following: relationshipData.includes(currentUser.id),
-      id: userId,
+      userId,
     })
   }
 

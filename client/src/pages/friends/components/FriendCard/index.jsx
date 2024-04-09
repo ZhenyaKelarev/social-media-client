@@ -1,48 +1,55 @@
 import React, { useState } from "react"
 import { getImage } from "utils/fileManipulation"
 import { Link } from "react-router-dom"
-import MoreVertIcon from "@mui/icons-material/MoreVert"
-import { Dropdown } from "@mui/base/Dropdown"
-import { MenuButton } from "@mui/base/MenuButton"
-import { Menu } from "@mui/base/Menu"
-import { MenuItem } from "@mui/base/MenuItem"
 import MenuSimple from "components/contextMenu"
+import { useFollowFriend } from "queries/relation/queries"
+
 import "./style.scss"
+import SubmitSimpleModal from "components/modals/submitModal"
 
 const FriendCard = ({ friendData }) => {
-  const [contextOpened, setContextOpened] = useState(false)
-  const handleContextMenu = (text) => {
-    console.log("123")
-    // setContextOpened((prev) => !prev)
+  const [removeFriendModal, setRemoveFriendModal] = useState(false)
+  const [giftModal, setGiftModal] = useState(false)
+  const followFriend = useFollowFriend()
+  const handleRemoveFriendModal = () => {
+    setRemoveFriendModal((prev) => !prev)
   }
+
+  const handleGiftModal = () => {
+    setGiftModal((prev) => !prev)
+  }
+
+  const handleApply = () => {
+    followFriend.mutate({ following: true, userId: friendData.id })
+    handleRemoveFriendModal()
+  }
+
+  const contextMenuItems = [
+    {
+      text: "Delete friend",
+      handler: handleRemoveFriendModal,
+    },
+    {
+      text: "Gift",
+      handler: handleRemoveFriendModal,
+    },
+  ]
   return (
     <div className="friend-card">
       <Link className="friend-info" to={`/profile/${friendData.id}`}>
         <img src={getImage(friendData.profilePic)} alt="default avatar" />
         <span>{friendData.name}</span>
       </Link>
-      <button onClick={handleContextMenu} className="context-menu">
-        <MoreVertIcon />
-        {contextOpened && (
-          <div className="context-menu-window">
-            <button className="button btn-primary">share gift</button>
-            <button className="button btn-warning">delete friend</button>
-          </div>
-        )}
-      </button>
-      <MenuSimple />
-      {/* <Dropdown>
-        <MenuButton>
-          <MoreVertIcon />
-        </MenuButton>
-        <Menu>
-          <MenuItem onClick={handleContextMenu()}>Profile</MenuItem>
-          <MenuItem onClick={handleContextMenu("Language settings")}>
-            Language settings
-          </MenuItem>
-          <MenuItem onClick={handleContextMenu("Log out")}>Log out</MenuItem>
-        </Menu>
-      </Dropdown> */}
+      <MenuSimple items={contextMenuItems} />
+      <SubmitSimpleModal
+        openModal={removeFriendModal}
+        closeModal={handleRemoveFriendModal}
+        title={`Are you sure delete ${friendData.name} ?`}
+        handleCancel={handleRemoveFriendModal}
+        handleApply={handleApply}
+        applyText="remove"
+        cancelText="cancel"
+      />
     </div>
   )
 }

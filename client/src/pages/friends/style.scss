@@ -1,7 +1,6 @@
 @import "../../style.scss";
 
 .friends-page {
-  min-height: 100%;
   @include themify($themes) {
     background-color: themed("bg");
     padding: 20px;

@@ -5,25 +5,20 @@ import { MenuButton as BaseMenuButton } from "@mui/base/MenuButton"
 import { MenuItem as BaseMenuItem, menuItemClasses } from "@mui/base/MenuItem"
 import MoreVertIcon from "@mui/icons-material/MoreVert"
 import { styled } from "@mui/system"
+import "./styles.scss"
 
-export default function MenuSimple() {
-  const createHandleMenuClick = (menuItem) => {
-    return () => {
-      console.log(`Clicked on ${menuItem}`)
-    }
-  }
-
+export default function MenuSimple({ items }) {
   return (
     <Dropdown>
       <MenuButton>
-        <MoreVertIcon />
+        <div className="icon">
+          <MoreVertIcon />
+        </div>
       </MenuButton>
       <Menu slots={{ listbox: Listbox }}>
-        <MenuItem onClick={createHandleMenuClick("Profile")}>Profile</MenuItem>
-        <MenuItem onClick={createHandleMenuClick("Language settings")}>
-          Language settings
-        </MenuItem>
-        <MenuItem onClick={createHandleMenuClick("Log out")}>Log out</MenuItem>
+        {items.map((item) => {
+          return <MenuItem onClick={item.handler}>{item.text}</MenuItem>
+        })}
       </Menu>
     </Dropdown>
   )
