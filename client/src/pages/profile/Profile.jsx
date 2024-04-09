@@ -17,50 +17,43 @@ import { useLocation } from "react-router-dom"
 import Update from "../../components/update/update"
 import ErrorMessage from "../../components/error"
 import { getImage } from "utils/fileManipulation"
+import { useGetRelations, useFollowFriend } from "queries/relation/queries"
+import { useGetUserInfo } from "queries/users/queries"
+import { useGetUserPosts } from "queries/posts/queries"
 
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false)
   const { currentUser } = useContext(AuthContext)
   const userId = parseInt(useLocation().pathname.split("/")[2])
 
-  const { isLoading, data, isError, error } = useQuery({
-    queryKey: ["user", userId],
-    queryFn: () =>
-      makeRequest.get("/users/find/" + userId).then((res) => res.data),
-  })
+  const { isLoading, data, isError, error } = useGetUserInfo(userId)
 
-  const { isLoading: relationshipIsLoading, data: relationshipData } = useQuery(
-    {
-      queryKey: ["relationship"],
-      queryFn: () =>
-        makeRequest
-          .get("/relationships?followedUserId=" + userId)
-          .then((res) => res.data),
-    }
-  )
+  const {
+    data: posts,
+    isLoading: isPostsLoading,
+    isError: isPostsError,
+  } = useGetUserPosts(userId)
 
-  const queryClient = useQueryClient()
+  const {
+    data: relationshipData,
+    isLoading: relationshipIsLoading,
+    isError: isRelationError,
+  } = useGetRelations(userId)
 
-  const mutation = useMutation({
-    mutationFn: (following) => {
-      if (following)
-        return makeRequest.delete("/relationships?userId=" + userId)
-      return makeRequest.post("/relationships", { userId })
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["relationship"] })
-      queryClient.invalidateQueries({ queryKey: ["allFriends"] })
-      queryClient.invalidateQueries({ queryKey: ["allUsers"] })
-    },
-  })
+  const followFriend = useFollowFriend()
 
   const handleFollow = () => {
-    mutation.mutate(relationshipData.includes(currentUser.id))
+    followFriend.mutate({
+      following: relationshipData.includes(currentUser.id),
+      userId,
+    })
   }
 
-  if (isLoading || relationshipIsLoading) return <h1>Loading...</h1>
+  if (isLoading || relationshipIsLoading || isPostsLoading)
+    return <h1>Loading...</h1>
 
-  if (isError) return <ErrorMessage message={error.response.data} />
+  if (isError || isRelationError || isPostsError)
+    return <ErrorMessage message={error.response.data} />
 
   return (
     <div className="profile">
@@ -115,7 +108,7 @@ const Profile = () => {
           </div>
         </div>
 
-        <Posts userId={userId} />
+        <Posts userId={userId} posts={posts} />
       </div>
       {openUpdate && <Update setOpenUpdate={setOpenUpdate} user={data} />}
     </div>

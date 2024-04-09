@@ -1,0 +1,7 @@
+@import "style.scss";
+
+.icon {
+  @include themify($themes) {
+    color: themed("textColor");
+  }
+}

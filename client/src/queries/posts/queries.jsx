@@ -2,9 +2,24 @@ import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query"
 import postRoute from "."
 
 const QUERY_KEYS = {
-  POSTS: "posts",
+  GET_POSTS: "getPosts",
+  USER_POSTS: "userPosts",
   LIKES: "likes",
   COMMENTS: "comments",
+}
+
+const useGetPosts = (userId) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_POSTS, userId],
+    queryFn: () => postRoute.getPosts(userId),
+  })
+}
+
+const useGetUserPosts = (userId) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.USER_POSTS, userId],
+    queryFn: () => postRoute.getUserPosts(userId),
+  })
 }
 
 const useDeletePost = () => {
@@ -17,10 +32,10 @@ const useDeletePost = () => {
   })
 }
 
-const useAddPost = () => {
+const useAddNewPost = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (postId) => postRoute.addPost(postId),
+    mutationFn: (newPost) => postRoute.addPost(newPost),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.POSTS] })
     },
@@ -65,10 +80,12 @@ const useAddComment = () => {
 }
 
 export {
+  useGetPosts,
   useDeletePost,
-  useAddPost,
+  useAddNewPost,
   useAddDeleteLike,
   useGetComments,
   useAddComment,
   useGetLikes,
+  useGetUserPosts,
 }

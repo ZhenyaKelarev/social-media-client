@@ -18,6 +18,7 @@ import { useContext } from "react"
 import { DarkModeContext } from "./context/darkModeContext"
 import { AuthContext } from "./context/authContext"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import Friends from "pages/friends/Friends"
 
 function App() {
   const { currentUser } = useContext(AuthContext)
@@ -32,7 +33,7 @@ function App() {
           <Navbar />
           <div style={{ display: "flex" }}>
             <LeftBar />
-            <div style={{ flex: 6 }}>
+            <div className="outlet" style={{ flex: 6 }}>
               <Outlet />
             </div>
             <RightBar />
@@ -70,6 +71,10 @@ function App() {
         {
           path: "/",
           element: <Home />,
+        },
+        {
+          path: "/friends",
+          element: <Friends />,
         },
         {
           path: "/profile/:id",

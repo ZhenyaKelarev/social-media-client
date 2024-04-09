@@ -4,7 +4,7 @@ import Map from "../../assets/map.png"
 import Friend from "../../assets/friend.png"
 import { useContext, useState } from "react"
 import { AuthContext } from "../../context/authContext"
-import { useAddNewPost } from "./Services"
+import { useAddNewPost } from "queries/posts/queries"
 import { upload } from "../../utils/fileManipulation"
 import { getImage } from "../../utils/fileManipulation"
 

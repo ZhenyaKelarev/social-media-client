@@ -1,15 +1,15 @@
 import React from "react"
 import { useContext } from "react"
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
+import { useQueryClient, useMutation } from "@tanstack/react-query"
 import { makeRequest } from "axios.js"
-import { AuthContext } from "../../../../context/authContext"
-import "../../rightBar.scss"
+import { AuthContext } from "context/authContext"
 import { getImage } from "utils/fileManipulation"
-
 import {
   SkeletonButton,
   SuggestionSkeleton,
 } from "../../Skeleton/SuggestionSkeleton"
+import { useGetAllUsers } from "queries/users/queries"
+import { useGetRelations } from "queries/relation/queries"
 import "../../rightBar.scss"
 
 const Suggestions = () => {
@@ -17,34 +17,14 @@ const Suggestions = () => {
   const { currentUser } = useContext(AuthContext)
   const userId = currentUser.id
 
-  const {
-    isLoading: usersIsLoading,
-    isError,
-    data: users,
-  } = useQuery({
-    queryKey: ["allUsers", userId],
-    queryFn: () =>
-      makeRequest
-        .get(`/users/allUsers?userId=${userId}`)
-        .then((res) => res.data),
-  })
+  const { isLoading: usersIsLoading, data: users } = useGetAllUsers(userId)
 
-  console.log("users", users)
-
-  const { isLoading: relationshipIsLoading, data: relationshipData } = useQuery(
-    {
-      queryKey: ["relationship", userId],
-      queryFn: () =>
-        makeRequest
-          .get("/relationships?followedUserId=" + userId)
-          .then((res) => res.data),
-    }
-  )
+  const { isLoading: relationshipIsLoading, data: relationshipData } =
+    useGetRelations(userId)
 
   const mutation = useMutation({
     mutationFn: (following) => {
       if (following)
-        // return makeRequest.delete("/relationships?userId=" + userId)
         return makeRequest.post("/relationships", { userId: following })
     },
     onSuccess: () => {
@@ -56,7 +36,6 @@ const Suggestions = () => {
 
   const handleFollow = (id) => {
     mutation.mutate(id)
-    // console.log("id", id)
   }
 
   if (usersIsLoading) return <SuggestionSkeleton />
@@ -81,14 +60,15 @@ const Suggestions = () => {
               {relationshipIsLoading ? (
                 <SkeletonButton />
               ) : (
-                <button onClick={() => handleFollow(user.id)}>
+                <button
+                  className="btn-primary"
+                  onClick={() => handleFollow(user.id)}
+                >
                   {relationshipData.includes(currentUser.id)
                     ? "Following"
                     : "Follow"}
                 </button>
               )}
-
-              <button>dismiss</button>
             </div>
           </div>
         )

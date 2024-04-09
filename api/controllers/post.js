@@ -27,13 +27,43 @@ export const getPosts = async (req, res) => {
     const posts = await prisma.post.findMany({
       where: {
         OR: [
-          { userId: userInfo.id },
           {
             userId: {
-              in: followedUserIds,
+              in: [...followedUserIds, userId],
             },
           },
         ],
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+            profilePic: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    })
+
+    return res.status(200).json(posts)
+  } catch (error) {
+    console.log("error", error)
+    return res.status(403).json(error)
+  }
+}
+
+export const getUserPosts = async (req, res) => {
+  const userId = parseInt(req.query.userId)
+  const token = req.headers.authorization
+
+  if (!token) return res.status(401).json("Not logged in!")
+
+  try {
+    const posts = await prisma.post.findMany({
+      where: {
+        OR: [{ userId }],
       },
       include: {
         user: {

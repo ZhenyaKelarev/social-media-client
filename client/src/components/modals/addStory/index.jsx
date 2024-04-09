@@ -1,21 +1,11 @@
 import "./style.scss"
 import React, { useState } from "react"
-import { makeRequest } from "axios.js"
-import { useAddStory } from "components/stories/Services/queries"
+import { useAddStory } from "queries/stories/queries"
+import { upload } from "utils/fileManipulation"
 
 function AddStory({ setOpenUpdate, userId }) {
   const [cover, setCover] = useState(null)
 
-  const upload = async (file) => {
-    try {
-      const formData = new FormData()
-      formData.append("file", file)
-      const res = await makeRequest.post("/upload", formData)
-      return res.data
-    } catch (err) {
-      console.log(err)
-    }
-  }
   const addStory = useAddStory()
 
   const handleClick = async (e) => {

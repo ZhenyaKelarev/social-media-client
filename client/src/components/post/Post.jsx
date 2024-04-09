@@ -14,7 +14,7 @@ import {
   useAddDeleteLike,
   useGetComments,
   useGetLikes,
-} from "./Services/queries"
+} from "queries/posts/queries"
 import { getImage } from "utils/fileManipulation"
 
 const Post = ({ post }) => {

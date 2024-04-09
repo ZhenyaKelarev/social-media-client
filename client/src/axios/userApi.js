@@ -39,14 +39,6 @@ const getUserInfo = async () => {
     .catch((e) => e.message)
   return result
 }
-
-const addPost = async (newPost) => {
-  const result = await makeRequest
-    .post("/posts", newPost)
-    .then((r) => r.data)
-    .catch((e) => e.message)
-  return result
-}
 // const tokenization = async () => {
 //   const result = await makeRequest
 //     .get("auth/refresh")
@@ -61,7 +53,6 @@ const authRoute = {
   loginUser,
   registerUser,
   getUserInfo,
-  addPost,
   // tokenization,
 }
 export default authRoute
