@@ -52,7 +52,7 @@ const ChatArea = ({ activeChat }) => {
             fullWidth
           />
         </Grid>
-        <Grid xs={2} align="right">
+        <Grid item xs={2} align="right">
           <Fab color="primary" aria-label="add">
             <SendIcon />
           </Fab>

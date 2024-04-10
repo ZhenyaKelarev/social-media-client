@@ -29,8 +29,6 @@ const Chat = () => {
     useGetAllFriends(userId)
   const [activeChat, setActiveChat] = useState(null)
 
-  console.log("activeChat", activeChat)
-
   useEffect(() => {
     if (!isFriendsIsLoading && friends && friends.length > 0) {
       // Set the activeChat to the id of the first friend in the friends array
