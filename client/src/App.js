@@ -19,9 +19,9 @@ import { DarkModeContext } from "./context/darkModeContext"
 import { AuthContext } from "./context/authContext"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import Friends from "pages/friends/Friends"
+import ChatPage from "pages/chat"
 
 function App() {
-  const { currentUser } = useContext(AuthContext)
   const token = localStorage.getItem("accessToken")
   const { darkMode } = useContext(DarkModeContext)
   const queryClient = new QueryClient()
@@ -75,6 +75,10 @@ function App() {
         {
           path: "/friends",
           element: <Friends />,
+        },
+        {
+          path: "/chat",
+          element: <ChatPage />,
         },
         {
           path: "/profile/:id",

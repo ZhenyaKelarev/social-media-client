@@ -1,7 +1,6 @@
 import "reflect-metadata"
-
 import express from "express"
-const app = express()
+import { createServer } from "http"
 import userRoutes from "./routes/users.js"
 import postRoutes from "./routes/posts.js"
 import commentRoutes from "./routes/comments.js"
@@ -11,9 +10,19 @@ import relationshipsRoutes from "./routes/relationships.js"
 import authRoutes from "./routes/auth.js"
 import cookieParser from "cookie-parser"
 import cors from "cors"
+import { Server } from "socket.io"
 import multer from "multer"
 
-// const prisma = new PrismaClient()
+const app = express()
+const httpServer = createServer(app)
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials: true, // Enable CORS with credentials
+  },
+})
 //middlewares
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", true)
@@ -25,6 +34,7 @@ app.use(
     origin: "http://localhost:3000",
   })
 )
+
 app.use(cookieParser())
 
 const storage = multer.diskStorage({
@@ -51,6 +61,13 @@ app.use("/api/auth", authRoutes)
 app.use("/api/relationships", relationshipsRoutes)
 app.use("/api/stories", storiesRoutes)
 
-app.listen(8800, () => {
+io.on("connect", (socket) => {
+  console.log("connect test")
+  io.on("disconnect", () => {
+    console.log("Disconnect test")
+  })
+})
+
+httpServer.listen(8800, () => {
   console.log("API working!")
 })

@@ -12,6 +12,8 @@ const Home = () => {
 
   const { data: posts, isLoading, isError } = useGetPosts(currentUser.id)
 
+  // console.log("posts", posts)
+
   return (
     <div className="home">
       <Stories userId={currentUser.id} />

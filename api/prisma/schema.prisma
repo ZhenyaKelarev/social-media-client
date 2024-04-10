@@ -33,12 +33,16 @@ model User {
   profilePic    String?
   city          String?
   website       String?
-  posts         Post[] //ASK
-  comments      Comment[] //ASK
+  posts         Post[]
+  comments      Comment[]
   likes         Like[]
   followedUsers Relationship[] @relation("FollowedUsers")
   followers     Relationship[] @relation("Followers")
   story         Story[]
+  notification  Notification[]
+  gift          Gift[]
+  Message       Message[]
+  GroupMember   GroupMember[]
 }
 
 model Post {
@@ -73,4 +77,47 @@ model Story {
   img    String
   user   User   @relation(fields: [userId], references: [id]) //ASK
   userId Int
+}
+
+model Notification {
+  id        Int       @id @unique @default(autoincrement())
+  createdAt DateTime?
+  eventText String
+  viewed    Boolean
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+}
+
+model Gift {
+  id        Int       @id @unique @default(autoincrement())
+  img       String
+  createdAt DateTime?
+  giftText  String
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+}
+
+model MessageGroup {
+  id          Int           @id @unique @default(autoincrement())
+  name        String
+  Message     Message[]
+  GroupMember GroupMember[]
+}
+
+model Message {
+  id       Int          @id @unique @default(autoincrement())
+  message  String
+  sendedAt DateTime
+  user     User         @relation(fields: [userId], references: [id])
+  userId   Int
+  group    MessageGroup @relation(fields: [groupId], references: [id])
+  groupId  Int
+}
+
+model GroupMember {
+  id      Int          @id @unique @default(autoincrement())
+  user    User         @relation(fields: [userId], references: [id])
+  userId  Int
+  group   MessageGroup @relation(fields: [groupId], references: [id])
+  groupId Int
 }
