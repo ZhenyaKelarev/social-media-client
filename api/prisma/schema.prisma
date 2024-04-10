@@ -9,8 +9,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("DATABASE_S_URL")
 }
 
 model Comment {
@@ -19,8 +20,8 @@ model Comment {
   createdAt DateTime?
   userId    Int
   postId    Int
-  user      User      @relation(fields: [userId], references: [id]) //ASK
-  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade) //ASK
+  user      User      @relation(fields: [userId], references: [id])
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -51,7 +52,7 @@ model Post {
   img       String?
   createdAt DateTime?
   userId    Int
-  user      User      @relation(fields: [userId], references: [id]) //ASK
+  user      User      @relation(fields: [userId], references: [id])
   comment   Comment[]
   likes     Like[]
 }
