@@ -41,7 +41,8 @@ model User {
   followers     Relationship[] @relation("Followers")
   story         Story[]
   notification  Notification[]
-  gift          Gift[]
+  giftToUser    Gift[]         @relation("GiftToUser")
+  giftFromUser  Gift[]         @relation("GiftFromUser")
   Message       Message[]
   GroupMember   GroupMember[]
 }
@@ -94,8 +95,10 @@ model Gift {
   img       String
   createdAt DateTime?
   giftText  String
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation("GiftToUser", fields: [userId], references: [id])
   userId    Int
+  gifter    User      @relation("GiftFromUser", fields: [gifterId], references: [id])
+  gifterId  Int
 }
 
 model MessageGroup {
