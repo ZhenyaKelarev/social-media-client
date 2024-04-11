@@ -5,6 +5,7 @@ import userRoutes from "./routes/users.js"
 import postRoutes from "./routes/posts.js"
 import commentRoutes from "./routes/comments.js"
 import likeRoutes from "./routes/likes.js"
+import giftRoutes from "./routes/gifts.js"
 import storiesRoutes from "./routes/stories.js"
 import relationshipsRoutes from "./routes/relationships.js"
 import authRoutes from "./routes/auth.js"
@@ -57,6 +58,7 @@ app.use("/api/users", userRoutes)
 app.use("/api/posts", postRoutes)
 app.use("/api/comments", commentRoutes)
 app.use("/api/likes", likeRoutes)
+app.use("/api/gifts", giftRoutes)
 app.use("/api/auth", authRoutes)
 app.use("/api/relationships", relationshipsRoutes)
 app.use("/api/stories", storiesRoutes)

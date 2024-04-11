@@ -12,6 +12,7 @@ import Messages from "../../assets/10.png"
 import Tutorials from "../../assets/11.png"
 import Courses from "../../assets/12.png"
 import Fund from "../../assets/13.png"
+import Gift from "../../assets/gift.png"
 import { AuthContext } from "../../context/authContext"
 import { useContext } from "react"
 import { getImage } from "utils/fileManipulation"
@@ -34,11 +35,13 @@ const LeftBar = () => {
               <span>Friends</span>
             </div>
           </Link>
+          <Link className="nav-link" to="/gifts">
+            <div className="item">
+              <img src={Gift} alt="" />
+              <span>Gifts</span>
+            </div>
+          </Link>
 
-          <div className="item">
-            <img src={Groups} alt="" />
-            <span>Groups</span>
-          </div>
           <div className="item">
             <img src={Market} alt="" />
             <span>Marketplace</span>

@@ -1,4 +1,3 @@
-import "./post.scss"
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined"
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined"
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined"
@@ -9,41 +8,36 @@ import Comments from "../comments/Comments"
 import { useState, useContext } from "react"
 import moment from "moment"
 import { AuthContext } from "../../context/authContext"
-import {
-  useDeletePost,
-  useAddDeleteLike,
-  useGetComments,
-  useGetLikes,
-} from "queries/posts/queries"
+import { useDeletePost, useAddDeleteLike } from "queries/posts/queries"
 import { getImage } from "utils/fileManipulation"
+import { useDebouncedCallback } from "use-debounce"
+import "./post.scss"
 
 const Post = ({ post }) => {
   const { currentUser } = useContext(AuthContext)
   const [commentOpen, setCommentOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
 
-  const { data, isLoading, isError } = useGetLikes(post.id)
-  const { data: commentsData, isLoading: isCommentsLoading } = useGetComments(
-    post.id
-  )
-
-  const deletePost = useDeletePost()
-  const addDeleteLike = useAddDeleteLike()
-
   const handleLike = () => {
     addDeleteLike.mutate({
-      liked: data.includes(currentUser.id),
+      liked: post.likes.includes(currentUser.id),
       postId: post.id,
     })
   }
 
+  const debouncedLike = useDebouncedCallback((id) => {
+    if (id) {
+      handleLike(post.id)
+    }
+    handleLike()
+  }, 300)
+
+  const deletePost = useDeletePost()
+  const addDeleteLike = useAddDeleteLike()
+
   const handleDelete = () => {
     deletePost.mutate(post.id)
   }
-
-  if (isLoading || isCommentsLoading) return null
-
-  if (isError) return <h1>Something went wrong</h1>
 
   return (
     <div className="post">
@@ -79,26 +73,26 @@ const Post = ({ post }) => {
         </div>
         <div className="info">
           <div className="item">
-            {data.includes(currentUser.id) ? (
+            {post.likes.includes(currentUser.id) ? (
               <FavoriteOutlinedIcon
+                onClick={() => debouncedLike(post.id)}
                 style={{ color: "red" }}
-                onClick={() => handleLike(post.id)}
               />
             ) : (
-              <FavoriteBorderOutlinedIcon onClick={handleLike} />
+              <FavoriteBorderOutlinedIcon onClick={() => debouncedLike()} />
             )}
-            {data?.length} likes
+            {post.likes?.length} likes
           </div>
           <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
             <TextsmsOutlinedIcon />
-            {commentsData?.length} Comments
+            {post.comment?.length} Comments
           </div>
           <div className="item">
             <ShareOutlinedIcon />
             Share
           </div>
         </div>
-        {commentOpen && <Comments data={commentsData} postId={post.id} />}
+        {commentOpen && <Comments data={post.comment} postId={post.id} />}
       </div>
     </div>
   )

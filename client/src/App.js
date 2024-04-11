@@ -16,10 +16,10 @@ import Page404 from "./pages/404"
 import "./style.scss"
 import { useContext } from "react"
 import { DarkModeContext } from "./context/darkModeContext"
-import { AuthContext } from "./context/authContext"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import Friends from "pages/friends/Friends"
 import ChatPage from "pages/chat"
+import GiftPage from "pages/gifts"
 
 function App() {
   const token = localStorage.getItem("accessToken")
@@ -75,6 +75,10 @@ function App() {
         {
           path: "/friends",
           element: <Friends />,
+        },
+        {
+          path: "/gifts",
+          element: <GiftPage />,
         },
         {
           path: "/chat",

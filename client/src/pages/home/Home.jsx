@@ -12,13 +12,13 @@ const Home = () => {
 
   const { data: posts, isLoading, isError } = useGetPosts(currentUser.id)
 
-  // console.log("posts", posts)
+  if (isLoading) return <Loader />
 
   return (
     <div className="home">
       <Stories userId={currentUser.id} />
       <Share />
-      {isLoading ? <Loader /> : <Posts userId={currentUser.id} posts={posts} />}
+      <Posts userId={currentUser.id} posts={posts} />
     </div>
   )
 }

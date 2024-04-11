@@ -57,7 +57,7 @@ const useAddDeleteLike = () => {
       return postRoute.addLike(postId)
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.LIKES] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_POSTS] })
     },
   })
 }
@@ -75,6 +75,7 @@ const useAddComment = () => {
     mutationFn: (newComment) => postRoute.addComment(newComment),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMMENTS] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_POSTS] })
     },
   })
 }
