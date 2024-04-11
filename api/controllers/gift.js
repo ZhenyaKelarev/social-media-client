@@ -13,6 +13,15 @@ export const getGifts = async (req, res) => {
       where: {
         OR: [{ userId: userInfo.id }],
       },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            profilePic: true,
+          },
+        },
+      },
       orderBy: {
         createdAt: "desc",
       },

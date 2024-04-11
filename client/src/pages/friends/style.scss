@@ -3,7 +3,6 @@
 .friends-page {
   @include themify($themes) {
     background-color: themed("bg");
-    padding: 20px;
 
     h1 {
       margin-bottom: 20px;

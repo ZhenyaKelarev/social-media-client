@@ -1,17 +1,21 @@
 import React from "react"
+import moment from "moment"
+import { getImage } from "utils/fileManipulation"
 import "./styles.scss"
 
-const GiftCard = () => {
+const GiftCard = ({ gift }) => {
   return (
-    <div class="flip-card">
+    <div class="flip-card gift-card">
       <div class="flip-card-inner">
         <div class="flip-card-front">
-          <p class="title">FLIP CARD</p>
-          <p>Hover Me</p>
+          <div className="flip-card-gift">
+            <img src={getImage(gift.img)} alt="avatar" />
+          </div>
         </div>
         <div class="flip-card-back">
-          <p class="title">BACK</p>
-          <p>Leave Me</p>
+          <p class="title">{gift.giftText}</p>
+          <p>from {gift.user.name}</p>
+          <p>{moment(gift.createdAt).format("DD.MM.YYYY")}</p>
         </div>
       </div>
     </div>

@@ -33,7 +33,7 @@ function App() {
           <Navbar />
           <div style={{ display: "flex" }}>
             <LeftBar />
-            <div className="outlet" style={{ flex: 6 }}>
+            <div className="outlet" style={{ flex: 6, padding: "20px" }}>
               <Outlet />
             </div>
             <RightBar />

@@ -28,6 +28,7 @@ const Login = () => {
     onSuccess: async (data) => {
       await setCurrentUser(data.user)
       navigate("/")
+      window.location.reload()
     },
     onError: (err) => {
       setErr(err.response.data)

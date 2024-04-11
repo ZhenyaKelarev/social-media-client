@@ -2,6 +2,7 @@ import React from "react"
 import { useGetGifts } from "queries/gifts/queries"
 import Loader from "components/Loader"
 import GiftCard from "components/giftCard"
+import "./style.scss"
 
 const GiftPage = () => {
   const { data: gifts, isLoading, isError } = useGetGifts()
@@ -11,10 +12,12 @@ const GiftPage = () => {
   console.log("gifts", gifts)
 
   return (
-    <div>
-      {gifts?.map((gift) => (
-        <GiftCard />
-      ))}
+    <div className="gifts-collection">
+      {gifts.length > 0 ? (
+        gifts.map((gift) => <GiftCard key={gift.id} gift={gift} />)
+      ) : (
+        <h1>No gifts</h1>
+      )}
     </div>
   )
 }

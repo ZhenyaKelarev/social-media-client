@@ -6,7 +6,7 @@ const useUpdateProfilePut = () => {
   return useMutation({
     mutationFn: (user) => profileRoute.updateUser(user),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] })
+      queryClient.invalidateQueries({ queryKey: ["userInfo"] })
     },
     onError: (err) => {
       console.log("err", err)
