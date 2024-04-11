@@ -5,16 +5,16 @@ import "./styles.scss"
 
 const GiftCard = ({ gift }) => {
   return (
-    <div class="flip-card gift-card">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
+    <div className="flip-card gift-card">
+      <div className="flip-card-inner">
+        <div className="flip-card-front">
           <div className="flip-card-gift">
-            <img src={getImage(gift.img)} alt="avatar" />
+            <img src={getImage(gift.giftCard.img)} alt="avatar" />
           </div>
         </div>
-        <div class="flip-card-back">
-          <p class="title">{gift.giftText}</p>
-          <p>from {gift.user.name}</p>
+        <div className="flip-card-back">
+          <p className="title">{gift.giftText}</p>
+          <p>from {gift.gifter.name}</p>
           <p>{moment(gift.createdAt).format("DD.MM.YYYY")}</p>
         </div>
       </div>

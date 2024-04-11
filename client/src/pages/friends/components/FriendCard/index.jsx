@@ -3,20 +3,21 @@ import { getImage } from "utils/fileManipulation"
 import { Link } from "react-router-dom"
 import MenuSimple from "components/contextMenu"
 import { useFollowFriend } from "queries/relation/queries"
+import { useNavigate } from "react-router-dom"
 
-import "./style.scss"
 import SubmitSimpleModal from "components/modals/submitModal"
+import "./style.scss"
 
 const FriendCard = ({ friendData }) => {
   const [removeFriendModal, setRemoveFriendModal] = useState(false)
-  const [giftModal, setGiftModal] = useState(false)
   const followFriend = useFollowFriend()
+  const navigate = useNavigate()
   const handleRemoveFriendModal = () => {
     setRemoveFriendModal((prev) => !prev)
   }
 
   const handleGiftModal = () => {
-    setGiftModal((prev) => !prev)
+    navigate("/marketplace")
   }
 
   const handleApply = () => {
@@ -26,11 +27,11 @@ const FriendCard = ({ friendData }) => {
 
   const contextMenuItems = [
     {
-      text: "Delete friend",
-      handler: handleRemoveFriendModal,
+      text: "Send gift",
+      handler: handleGiftModal,
     },
     {
-      text: "Gift",
+      text: "Delete friend",
       handler: handleRemoveFriendModal,
     },
   ]

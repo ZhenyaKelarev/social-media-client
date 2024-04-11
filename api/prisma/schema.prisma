@@ -90,15 +90,34 @@ model Notification {
   userId    Int
 }
 
+// model Gift {
+//   id        Int       @id @unique @default(autoincrement())
+//   img       String
+//   createdAt DateTime?
+//   giftText  String
+//   user      User      @relation("GiftToUser", fields: [userId], references: [id])
+//   userId    Int
+//   gifter    User      @relation("GiftFromUser", fields: [gifterId], references: [id])
+//   gifterId  Int
+// }
+
 model Gift {
-  id        Int       @id @unique @default(autoincrement())
-  img       String
-  createdAt DateTime?
-  giftText  String
-  user      User      @relation("GiftToUser", fields: [userId], references: [id])
-  userId    Int
-  gifter    User      @relation("GiftFromUser", fields: [gifterId], references: [id])
-  gifterId  Int
+  id         Int       @id @unique @default(autoincrement())
+  createdAt  DateTime?
+  giftText   String
+  user       User      @relation("GiftToUser", fields: [userId], references: [id])
+  userId     Int
+  gifter     User      @relation("GiftFromUser", fields: [gifterId], references: [id])
+  gifterId   Int
+  giftCard   GiftCard  @relation(fields: [giftCardId], references: [id])
+  giftCardId Int
+}
+
+model GiftCard {
+  id    Int    @id @unique @default(autoincrement())
+  img   String
+  name  String
+  gifts Gift[]
 }
 
 model MessageGroup {

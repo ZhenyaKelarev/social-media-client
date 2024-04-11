@@ -42,10 +42,12 @@ const LeftBar = () => {
             </div>
           </Link>
 
-          <div className="item">
-            <img src={Market} alt="" />
-            <span>Marketplace</span>
-          </div>
+          <Link className="nav-link" to="/marketplace">
+            <div className="item">
+              <img src={Market} alt="" />
+              <span>Marketplace</span>
+            </div>
+          </Link>
           <div className="item">
             <img src={Watch} alt="" />
             <span>Watch</span>

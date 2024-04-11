@@ -13,7 +13,13 @@ export const getGifts = async (req, res) => {
       where: {
         OR: [{ userId: userInfo.id }],
       },
-      include: {
+      orderBy: {
+        createdAt: "desc",
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        giftText: true,
         user: {
           select: {
             id: true,
@@ -21,9 +27,20 @@ export const getGifts = async (req, res) => {
             profilePic: true,
           },
         },
-      },
-      orderBy: {
-        createdAt: "desc",
+        giftCard: {
+          select: {
+            id: true,
+            name: true,
+            img: true,
+          },
+        },
+        gifter: {
+          select: {
+            id: true,
+            name: true,
+            profilePic: true,
+          },
+        },
       },
     })
 

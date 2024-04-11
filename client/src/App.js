@@ -20,6 +20,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import Friends from "pages/friends/Friends"
 import ChatPage from "pages/chat"
 import GiftPage from "pages/gifts"
+import MarketPlacePage from "pages/marketPlacePage"
 
 function App() {
   const token = localStorage.getItem("accessToken")
@@ -79,6 +80,10 @@ function App() {
         {
           path: "/gifts",
           element: <GiftPage />,
+        },
+        {
+          path: "/marketplace",
+          element: <MarketPlacePage />,
         },
         {
           path: "/chat",

@@ -9,15 +9,16 @@ const GiftPage = () => {
 
   if (isLoading) return <Loader />
 
-  console.log("gifts", gifts)
-
   return (
-    <div className="gifts-collection">
-      {gifts.length > 0 ? (
-        gifts.map((gift) => <GiftCard key={gift.id} gift={gift} />)
-      ) : (
-        <h1>No gifts</h1>
-      )}
+    <div>
+      <h1>Gifts</h1>
+      <div className="gifts-collection">
+        {gifts.length > 0 ? (
+          gifts.map((gift) => <GiftCard key={gift.id} gift={gift} />)
+        ) : (
+          <h1>No gifts</h1>
+        )}
+      </div>
     </div>
   )
 }
