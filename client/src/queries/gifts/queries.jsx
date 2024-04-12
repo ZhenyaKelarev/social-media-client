@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
 import giftRoute from "."
 
 const QUERY_KEYS = {
@@ -14,4 +14,14 @@ const useGetGifts = () => {
   })
 }
 
-export { useGetGifts }
+const useSendGift = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (gift) => giftRoute.sendGift(gift),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_GIFTS] })
+    },
+  })
+}
+
+export { useGetGifts, useSendGift }

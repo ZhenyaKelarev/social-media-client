@@ -1,0 +1,137 @@
+.marketplace-modal {
+  .submit-btns {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .product-info {
+    display: flex;
+  }
+  .product-card {
+    border-radius: 20px;
+    padding: 5px;
+    box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+    background-image: linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb);
+
+    .card__content {
+      width: 450px;
+      max-height: 650px;
+      height: 100%;
+      font-size: 0;
+      line-height: 0;
+    }
+    .card {
+      overflow: hidden;
+      height: 100%;
+    }
+
+    img {
+      border-radius: 20px;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .product-about {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding: 20px;
+    h2 {
+      font-size: 70px;
+      color: #5b42f3;
+    }
+    p {
+      font-size: 16px;
+    }
+
+    .buy-btn {
+      align-items: center;
+      background-image: linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb);
+      border: 0;
+      border-radius: 8px;
+      box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+      box-sizing: border-box;
+      color: #ffffff;
+      display: flex;
+      font-family: Phantomsans, sans-serif;
+      font-size: 18px;
+      justify-content: center;
+      line-height: 1em;
+      max-width: 100%;
+      min-width: 140px;
+      padding: 3px;
+      text-decoration: none;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .buy-btn:active,
+    .buy-btn:hover {
+      outline: 0;
+    }
+
+    .buy-btn span {
+      background-color: rgb(5, 6, 45);
+      padding: 16px 24px;
+      border-radius: 6px;
+      width: 100%;
+      transition: 300ms;
+    }
+
+    .buy-btn:hover span {
+      background: none;
+    }
+
+    .buy-btn:active {
+      transform: scale(0.9);
+    }
+  }
+
+  .modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    outline: none;
+    background: linear-gradient(to right, #ffe259, #ffa751);
+  }
+
+  .close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+
+  .select-friend-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  form {
+    input {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid lightgray;
+      padding: 20px 10px;
+      margin-bottom: 5px;
+      outline: none;
+      border-radius: 10px;
+    }
+  }
+}

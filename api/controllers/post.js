@@ -86,10 +86,29 @@ export const getUserPosts = async (req, res) => {
 
   if (!token) return res.status(401).json("Not logged in!")
 
+  const followedUsers = await prisma.relationship.findMany({
+    where: {
+      followerUserId: userId,
+    },
+    select: {
+      followedUserId: true,
+    },
+  })
+
+  const followedUserIds = followedUsers.map((user) => user.followedUserId)
+
   try {
+    jwt.verify(token, "secretkey")
+
     const posts = await prisma.post.findMany({
       where: {
-        OR: [{ userId }],
+        OR: [
+          {
+            userId: {
+              in: [userId],
+            },
+          },
+        ],
       },
       include: {
         user: {
@@ -98,10 +117,36 @@ export const getUserPosts = async (req, res) => {
             profilePic: true,
           },
         },
+        comment: {
+          select: {
+            id: true,
+            desc: true,
+            createdAt: true,
+            user: {
+              select: {
+                name: true,
+                profilePic: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+        likes: {
+          select: {
+            userId: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
       },
+    })
+
+    // Map the likes array to extract only the userIds
+    posts.forEach((post) => {
+      post.likes = post.likes.map((like) => like.userId)
     })
 
     return res.status(200).json(posts)

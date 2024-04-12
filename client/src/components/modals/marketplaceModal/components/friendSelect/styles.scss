@@ -1,0 +1,18 @@
+.friend-select {
+  &-element {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+
+    div {
+      border-radius: 50%;
+    }
+
+    img {
+      width: 30px;
+      height: 30px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  }
+}

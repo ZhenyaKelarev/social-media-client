@@ -9,8 +9,8 @@ const deleteGift = async (postId, config) => {
   return performRequest(makeRequest.delete, "/gifts/" + postId, config)
 }
 
-const sendGift = async (newPost) => {
-  return performRequest(makeRequest.post, "/gifts", newPost)
+const sendGift = async (gift) => {
+  return performRequest(makeRequest.post, "/gifts", gift)
 }
 
 const postRoute = {

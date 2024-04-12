@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken"
 import { PrismaClient } from "@prisma/client"
+import moment from "moment"
 const prisma = new PrismaClient()
 
 export const getGifts = async (req, res) => {
@@ -54,19 +55,26 @@ export const sendGift = async (req, res) => {
   const token = req.headers.authorization
 
   if (!token) return res.status(401).json("Not logged in!")
+
   try {
     const userInfo = jwt.verify(token, "secretkey")
 
-    await prisma.like.create({
-      data: {
-        userId: Number(userInfo.id),
-        postId: Number(req.body.postId),
-      },
+    const newGift = {
+      giftText: req.body.giftText,
+      createdAt: moment().toISOString(),
+      gifterId: userInfo.id,
+      userId: req.body.sendToUserId,
+      giftCardId: req.body.giftCardId,
+    }
+
+    await prisma.gift.create({
+      data: newGift,
     })
 
-    return res.status(200).json("Post has been liked.")
+    return res.status(200).json("Gift has been sended")
   } catch (error) {
-    return res.status(500).json(error.message)
+    console.log(error)
+    return res.status(500).json(error)
   }
 }
 
