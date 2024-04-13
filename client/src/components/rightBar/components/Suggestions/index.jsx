@@ -10,6 +10,7 @@ import {
 } from "../../Skeleton/SuggestionSkeleton"
 import { useGetAllUsers } from "queries/users/queries"
 import { useGetRelations } from "queries/relation/queries"
+import { useAddNotification } from "queries/notifications/queries"
 import "../../rightBar.scss"
 
 const Suggestions = () => {
@@ -18,6 +19,7 @@ const Suggestions = () => {
   const userId = currentUser.id
 
   const { isLoading: usersIsLoading, data: users } = useGetAllUsers(userId)
+  const addNotification = useAddNotification()
 
   const { isLoading: relationshipIsLoading, data: relationshipData } =
     useGetRelations(userId)
@@ -34,8 +36,12 @@ const Suggestions = () => {
     },
   })
 
-  const handleFollow = (id) => {
-    mutation.mutate(id)
+  const handleFollow = async (id) => {
+    await mutation.mutateAsync(id)
+    addNotification.mutate({
+      eventText: "follows you",
+      toUserId: id,
+    })
   }
 
   if (usersIsLoading) return <SuggestionSkeleton />

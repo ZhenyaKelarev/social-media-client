@@ -9,6 +9,7 @@ import giftRoutes from "./routes/gifts.js"
 import storiesRoutes from "./routes/stories.js"
 import relationshipsRoutes from "./routes/relationships.js"
 import marketplaceRoutes from "./routes/marketplace.js"
+import notificationRoutes from "./routes/notifications.js"
 import authRoutes from "./routes/auth.js"
 import cookieParser from "cookie-parser"
 import cors from "cors"
@@ -61,6 +62,7 @@ app.use("/api/comments", commentRoutes)
 app.use("/api/likes", likeRoutes)
 app.use("/api/gifts", giftRoutes)
 app.use("/api/marketplace", marketplaceRoutes)
+app.use("/api/notifications", notificationRoutes)
 app.use("/api/auth", authRoutes)
 app.use("/api/relationships", relationshipsRoutes)
 app.use("/api/stories", storiesRoutes)

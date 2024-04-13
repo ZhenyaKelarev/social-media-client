@@ -42,6 +42,14 @@ makeRequest.interceptors.response.use(
     //   await authRoute.tokenization()
     //   return
     // }
+    if (error.response.status === 500 && !originalRequest._retry) {
+      originalRequest._retry = true
+      try {
+        return makeRequest(originalRequest)
+      } catch (err) {
+        return Promise.reject(err)
+      }
+    }
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
       try {

@@ -4,6 +4,7 @@ import Modal from "@mui/material/Modal"
 import CloseIcon from "@mui/icons-material/Close"
 import { getImage } from "utils/fileManipulation"
 import { useSendGift } from "queries/gifts/queries"
+import { useAddNotification } from "queries/notifications/queries"
 import GradientButton from "components/gradientButton"
 import FriendSelect from "./components/friendSelect"
 import { useForm } from "react-hook-form"
@@ -12,6 +13,7 @@ import "./styles.scss"
 const MarketPlaceModal = ({ openModal, closeModal, marketplaceItem }) => {
   const [chooseFriend, setChooseFriend] = useState(false)
   const sendGift = useSendGift()
+  const addNotification = useAddNotification()
 
   const {
     register,
@@ -33,11 +35,15 @@ const MarketPlaceModal = ({ openModal, closeModal, marketplaceItem }) => {
     closeModal()
   }
   const handleSendGift = async (data) => {
-    await sendGift.mutateAsync(
+    await sendGift.mutateAsync({
+      giftText: data.message,
+      sendToUserId: friendId,
+      giftCardId: marketplaceItem.id,
+    })
+    await addNotification.mutateAsync(
       {
-        giftText: data.message,
-        sendToUserId: friendId,
-        giftCardId: marketplaceItem.id,
+        eventText: "send you a gift",
+        toUserId: friendId,
       },
       {
         onSuccess: () => {
@@ -73,16 +79,7 @@ const MarketPlaceModal = ({ openModal, closeModal, marketplaceItem }) => {
                 {marketplaceItem.name}
               </Typography>
               <Typography id="modal-modal-title" variant="p" component="p">
-                It is a long established fact that a reader will be distracted
-                by the readable content of a page when looking at its layout.
-                The point of using Lorem Ipsum is that it has a more-or-less
-                normal distribution of letters, as opposed to using 'Content
-                here, content here', making it look like readable English. Many
-                desktop publishing packages and web page editors now use Lorem
-                Ipsum as their default model text, and a search for 'lorem
-                ipsum' will uncover many web sites still in their infancy.
-                Various versions have evolved over the years, sometimes by
-                accident, sometimes on purpose (injected humour and the like).
+                {marketplaceItem.description}
               </Typography>
             </div>
 
