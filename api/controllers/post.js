@@ -211,7 +211,9 @@ export const deletePost = async (req, res) => {
       return res.status(403).json("You can delete only your post")
     }
 
-    deleteFile(post.img)
+    if (post.img) {
+      deleteFile(post.img)
+    }
 
     await prisma.post.delete({
       where: {

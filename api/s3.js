@@ -17,8 +17,6 @@ const s3 = new S3({
 
 // uploads a file to s3
 const uploadFile = (file) => {
-  // const fileStream = fs.createReadStream(file.path)
-
   const uploadParams = {
     Bucket: bucketName,
     Body: file.buffer,
@@ -46,8 +44,6 @@ const getFileNameFromUrl = (url) => {
 }
 
 const deleteFile = (fileKey) => {
-  console.log("fileKey", fileKey)
-
   const deleteParams = {
     Bucket: bucketName,
     Key: getFileNameFromUrl(fileKey),

@@ -58,9 +58,7 @@ const Navbar = () => {
         <Link to={`/profile/${currentUser.id}`}>
           <PersonOutlinedIcon />
         </Link>
-        <button>
-          <ExitToAppIcon onClick={handleExit} className="icon-button" />
-        </button>
+        <ExitToAppIcon onClick={handleExit} className="icon-button" />
         {!isLoading && (
           <Badge badgeContent={notificationData.length} color="primary">
             <Notifications notificationData={notificationData} />

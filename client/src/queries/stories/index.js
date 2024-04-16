@@ -5,5 +5,9 @@ const addStory = async (newStory) => {
   return performRequest(makeRequest.post, "/stories", newStory)
 }
 
-const storyRoute = { addStory }
+const getStories = async () => {
+  return performRequest(makeRequest.get, "/stories")
+}
+
+const storyRoute = { addStory, getStories }
 export default storyRoute

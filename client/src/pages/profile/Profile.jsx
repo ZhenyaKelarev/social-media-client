@@ -19,6 +19,7 @@ import { getImage } from "utils/fileManipulation"
 import { useGetRelations, useFollowFriend } from "queries/relation/queries"
 import { useGetUserInfo } from "queries/users/queries"
 import { useGetUserPosts } from "queries/posts/queries"
+import Loader from "components/Loader"
 
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false)
@@ -48,8 +49,7 @@ const Profile = () => {
     })
   }
 
-  if (isLoading || relationshipIsLoading || isPostsLoading)
-    return <h1>Loading...</h1>
+  if (isLoading || relationshipIsLoading || isPostsLoading) return <Loader />
 
   if (isError || isRelationError || isPostsError)
     return <ErrorMessage message={error.response.data} />

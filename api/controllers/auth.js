@@ -58,6 +58,7 @@ export const login = async (req, res) => {
       accessToken,
       user,
     }
+
     return res.status(200).json(loginData)
   } catch (err) {
     console.log(err)

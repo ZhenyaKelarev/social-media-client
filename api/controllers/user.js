@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken"
 import { PrismaClient } from "@prisma/client"
 import { checkIdValidation } from "../utils/helpers.js"
+import { uploadFile, deleteFile } from "../s3.js"
 const prisma = new PrismaClient()
 
 export const getUser = async (req, res) => {
@@ -30,20 +31,42 @@ export const updateUser = async (req, res) => {
 
   try {
     const userInfo = await jwt.verify(token, "secretkey")
-
+    const body = JSON.parse(req.body.texts)
+    const currentUser = await prisma.user.findFirst({
+      where: {
+        id: Number(userInfo.id),
+      },
+    })
+    if (!!req.files.profile?.[0]) {
+      deleteFile(currentUser.profilePic)
+    }
+    if (!!req.files.cover?.[0]) {
+      deleteFile(currentUser.coverPic)
+    }
+    let coverImage
+    let profileImage
+    if (!!req.files?.cover?.[0]) {
+      coverImage = await uploadFile(req.files.cover[0])
+    }
+    if (!!req.files?.profile?.[0]) {
+      profileImage = await uploadFile(req.files.profile[0])
+    }
     const updatedUser = await prisma.user.update({
       where: { id: Number(userInfo.id) },
       data: {
-        name: req.body.name,
-        city: req.body.city,
-        website: req.body.website,
-        profilePic: req.body.profilePic,
-        coverPic: req.body.coverPic,
+        name: body.name,
+        city: body.city,
+        website: body.website,
+        profilePic: profileImage?.Location
+          ? profileImage.Location
+          : currentUser.profilePic,
+        coverPic: coverImage?.Location
+          ? coverImage.Location
+          : currentUser.coverPic,
       },
     })
-
     if (updatedUser) {
-      return res.json("Updated!")
+      return res.json(updatedUser)
     } else {
       return res.status(403).json("You can update only your post!")
     }
@@ -51,6 +74,7 @@ export const updateUser = async (req, res) => {
     if (error.name === "JsonWebTokenError") {
       return res.status(403).json("Token is not valid!")
     } else {
+      console.log("error", error)
       return res.status(500).json(error)
     }
   }

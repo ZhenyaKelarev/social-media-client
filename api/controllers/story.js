@@ -13,7 +13,7 @@ export const getStories = async (req, res) => {
 
     const stories = await prisma.story.findMany({
       where: {
-        userId: userId ? parseInt(userId) : userInfo.id,
+        userId: userInfo.id,
       },
       include: {
         user: {

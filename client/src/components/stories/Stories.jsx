@@ -1,35 +1,24 @@
 import { useContext, useState } from "react"
-
-import { useQuery } from "@tanstack/react-query"
-import { makeRequest } from "../../axios"
 import { AuthContext } from "../../context/authContext"
 import AddStory from "../../components/modals/addStory"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper/modules"
 import { getImage } from "utils/fileManipulation"
 import { StoriesSkeleton } from "./Skeleton"
-
+import { useGetStories } from "queries/stories/queries"
 import "swiper/css"
 import "swiper/css/navigation"
 import "./stories.scss"
 
-const Stories = ({ userId }) => {
+const Stories = () => {
   const { currentUser } = useContext(AuthContext)
   const [openModal, setOpenModal] = useState(false)
 
-  const {
-    isLoading,
-    isError,
-    data: stories,
-  } = useQuery({
-    queryKey: ["stories"],
-    queryFn: () =>
-      makeRequest.get("/stories?userId=" + userId).then((res) => res.data),
-  })
+  const { data: stories, isLoading, isError } = useGetStories()
 
   if (isLoading) return <StoriesSkeleton />
 
-  if (isError) return <h1>Something went wrong</h1>
+  if (isError) return <StoriesSkeleton />
 
   return (
     <div className="stories">
@@ -64,7 +53,7 @@ const Stories = ({ userId }) => {
       >
         {stories?.map((story) => (
           <SwiperSlide className="story" key={story.id}>
-            <img src={"/upload/" + story.img} alt="" />
+            <img src={story.img} alt="" />
             <span>{story.user.name}</span>
           </SwiperSlide>
         ))}

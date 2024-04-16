@@ -1,9 +1,9 @@
-import "./update.scss"
 import React, { useState, useContext } from "react"
 import { AuthContext } from "../../context/authContext"
-import { upload } from "../../utils/fileManipulation"
 import { useUpdateProfilePut } from "../../pages/profile/Services/queries"
 import { getImage } from "../../utils/fileManipulation"
+import Loader from "components/Loader"
+import "./update.scss"
 
 function Update({ setOpenUpdate, user }) {
   const { currentUser, setCurrentUser } = useContext(AuthContext)
@@ -19,42 +19,29 @@ function Update({ setOpenUpdate, user }) {
     setTexts((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const updateProfile = useUpdateProfilePut()
+  const { mutateAsync, isPending } = useUpdateProfilePut()
 
   const handleClick = async (e) => {
     e.preventDefault()
-    let coverUrl
-    let profileUrl
 
-    coverUrl = cover ? await upload(cover) : user.coverPic
-    profileUrl = profile ? await upload(profile) : user.profilePic
+    const formData = new FormData()
+    if (cover) formData.append("cover", cover)
+    if (profile) formData.append("profile", profile)
 
-    const updatedUser = {
-      ...currentUser,
-      ...texts,
-      coverPic: coverUrl,
-      profilePic: profileUrl,
-    }
+    formData.append("texts", JSON.stringify(texts))
+    formData.append("currentUser", JSON.stringify(currentUser))
 
-    await updateProfile.mutateAsync(
-      {
-        ...texts,
-        coverPic: coverUrl,
-        profilePic: profileUrl,
+    await mutateAsync(formData, {
+      onSuccess: (data) => {
+        setCurrentUser(data)
+        localStorage.setItem("user", JSON.stringify(data))
       },
-      {
-        onSuccess: () => {
-          setOpenUpdate(false)
-          setCurrentUser(updatedUser)
-          localStorage.setItem("user", JSON.stringify(updatedUser))
-        },
-        onError: () => {
-          console.log("error")
-        },
-      }
-    )
+      onError: () => {
+        console.log("error")
+      },
+    })
 
-    setOpenUpdate(false)
+    await setOpenUpdate(false)
   }
 
   return (
@@ -91,7 +78,6 @@ function Update({ setOpenUpdate, user }) {
                   }
                   alt=""
                 />
-                {/* <CloudUploadIcon className="icon" /> */}
               </div>
             </label>
             <input
@@ -101,21 +87,6 @@ function Update({ setOpenUpdate, user }) {
               onChange={(e) => setProfile(e.target.files[0])}
             />
           </div>
-
-          {/* <label>Email</label>
-          <input
-            type="text"
-            value={texts.email}
-            name="email"
-            onChange={handleChange}
-          />
-          <label>Password</label>
-          <input
-            type="text"
-            value={texts.password}
-            name="password"
-            onChange={handleChange}
-          /> */}
           <label>Name</label>
           <input
             type="text"
@@ -137,9 +108,17 @@ function Update({ setOpenUpdate, user }) {
             value={texts.website}
             onChange={handleChange}
           />
-          <button onClick={handleClick}>Update</button>
+          {isPending ? (
+            <Loader />
+          ) : (
+            <button onClick={handleClick}>Update</button>
+          )}
         </form>
-        <button className="close" onClick={() => setOpenUpdate(false)}>
+        <button
+          disabled={isPending}
+          className="close"
+          onClick={() => setOpenUpdate(false)}
+        >
           close
         </button>
       </div>

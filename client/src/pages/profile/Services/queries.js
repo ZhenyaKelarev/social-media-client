@@ -7,6 +7,7 @@ const useUpdateProfilePut = () => {
     mutationFn: (user) => profileRoute.updateUser(user),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["userInfo"] })
+      queryClient.invalidateQueries({ queryKey: ["userPosts"] })
     },
     onError: (err) => {
       console.log("err", err)
