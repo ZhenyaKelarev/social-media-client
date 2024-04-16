@@ -17,9 +17,11 @@ const Share = () => {
 
   const handleClick = async (e) => {
     e.preventDefault()
-    let imgUrl = ""
-    if (file) imgUrl = await upload(file)
-    postAddPost.mutate({ desc, img: imgUrl })
+
+    const formData = new FormData()
+    if (file) formData.append("img", file)
+    formData.append("desc", desc)
+    await postAddPost.mutateAsync(formData)
     setDesc("")
     setFile(null)
   }

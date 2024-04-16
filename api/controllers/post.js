@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken"
 import moment from "moment"
 import { PrismaClient } from "@prisma/client"
+import { uploadFile, deleteFile } from "../s3.js"
 
 const prisma = new PrismaClient()
 
@@ -164,9 +165,14 @@ export const addPost = async (req, res) => {
   try {
     const userInfo = jwt.verify(token, "secretkey")
 
+    let location
+    if (req.file) {
+      location = await uploadFile(req.file)
+    }
+
     const newPost = {
       desc: req.body.desc,
-      img: req.body.img,
+      img: location ? location.Location : null,
       createdAt: moment().toISOString(),
       userId: userInfo.id,
     }
@@ -177,6 +183,7 @@ export const addPost = async (req, res) => {
 
     return res.status(200).json("Post has been created")
   } catch (error) {
+    console.log("error", error)
     return res.status(500).json(error)
   }
 }
@@ -203,6 +210,8 @@ export const deletePost = async (req, res) => {
     if (!post) {
       return res.status(403).json("You can delete only your post")
     }
+
+    deleteFile(post.img)
 
     await prisma.post.delete({
       where: {

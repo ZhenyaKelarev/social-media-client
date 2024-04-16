@@ -27,7 +27,7 @@ const useDeletePost = () => {
   return useMutation({
     mutationFn: (postId) => postRoute.deletePost(postId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.POSTS] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_POSTS] })
     },
   })
 }
@@ -37,7 +37,7 @@ const useAddNewPost = () => {
   return useMutation({
     mutationFn: (newPost) => postRoute.addPost(newPost),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.POSTS] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_POSTS] })
     },
   })
 }

@@ -13,7 +13,9 @@ const upload = async (file) => {
 }
 
 const getImage = (fileName) => {
-  const imagePath = fileName ? `/upload/${fileName}` : DefaultAvatar
+  const imagePath = fileName
+    ? fileName
+    : "https://kielariev-social-media-bucket.s3.eu-north-1.amazonaws.com/defaultAvatar.jpeg"
   return imagePath
 }
 
