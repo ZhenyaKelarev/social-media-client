@@ -20,7 +20,7 @@ model Comment {
   createdAt DateTime?
   userId    Int
   postId    Int
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
@@ -54,7 +54,7 @@ model Post {
   img       String?
   createdAt DateTime?
   userId    Int
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   comment   Comment[]
   likes     Like[]
 }
@@ -63,22 +63,22 @@ model Like {
   id     Int  @id @unique @default(autoincrement())
   userId Int
   postId Int
-  user   User @relation(fields: [userId], references: [id]) //ASK
-  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade) //ASK
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
 model Relationship {
   id             Int  @id @unique @default(autoincrement())
-  followedUser   User @relation("FollowedUsers", fields: [followedUserId], references: [id])
+  followedUser   User @relation("FollowedUsers", fields: [followedUserId], references: [id], onDelete: Cascade)
   followedUserId Int
-  followerUser   User @relation("Followers", fields: [followerUserId], references: [id])
+  followerUser   User @relation("Followers", fields: [followerUserId], references: [id], onDelete: Cascade)
   followerUserId Int
 }
 
 model Story {
   id     Int    @id @unique @default(autoincrement())
   img    String
-  user   User   @relation(fields: [userId], references: [id]) //ASK
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
 }
 
@@ -87,9 +87,9 @@ model Notification {
   createdAt  DateTime?
   eventText  String
   viewed     Boolean
-  user       User      @relation("EventToUser", fields: [userId], references: [id])
+  user       User      @relation("EventToUser", fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
-  fromUser   User?     @relation("EventFromUser", fields: [fromUserId], references: [id])
+  fromUser   User?     @relation("EventFromUser", fields: [fromUserId], references: [id], onDelete: Cascade)
   fromUserId Int?
 }
 
@@ -97,9 +97,9 @@ model Gift {
   id         Int       @id @unique @default(autoincrement())
   createdAt  DateTime?
   giftText   String
-  user       User      @relation("GiftToUser", fields: [userId], references: [id])
+  user       User      @relation("GiftToUser", fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
-  gifter     User      @relation("GiftFromUser", fields: [gifterId], references: [id])
+  gifter     User      @relation("GiftFromUser", fields: [gifterId], references: [id], onDelete: Cascade)
   gifterId   Int
   giftCard   GiftCard  @relation(fields: [giftCardId], references: [id])
   giftCardId Int
@@ -124,7 +124,7 @@ model Message {
   id       Int          @id @unique @default(autoincrement())
   message  String
   sendedAt DateTime
-  user     User         @relation(fields: [userId], references: [id])
+  user     User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId   Int
   group    MessageGroup @relation(fields: [groupId], references: [id])
   groupId  Int
@@ -132,7 +132,7 @@ model Message {
 
 model GroupMember {
   id      Int          @id @unique @default(autoincrement())
-  user    User         @relation(fields: [userId], references: [id])
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  Int
   group   MessageGroup @relation(fields: [groupId], references: [id])
   groupId Int
