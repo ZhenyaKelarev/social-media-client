@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken"
 import { PrismaClient } from "@prisma/client"
+import { uploadFile, deleteFile } from "../s3.js"
 const prisma = new PrismaClient()
 
 export const getStories = async (req, res) => {
@@ -42,10 +43,15 @@ export const addStory = async (req, res) => {
     const userInfo = jwt.verify(token, "secretkey")
     if (!userInfo) return res.status(403).json("Token is not valid!")
 
+    let location
+    if (req.file) {
+      location = await uploadFile(req.file)
+    }
+
     // Create story using Prisma
     await prisma.story.create({
       data: {
-        img: req.body.img,
+        img: location ? location.Location : null,
         userId: userInfo.id,
       },
     })

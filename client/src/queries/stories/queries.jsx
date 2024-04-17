@@ -11,7 +11,7 @@ const useAddStory = () => {
   return useMutation({
     mutationFn: (newStory) => storyRoute.addStory(newStory),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.STORIES] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_STORIES] })
     },
   })
 }

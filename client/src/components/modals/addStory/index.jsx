@@ -10,11 +10,11 @@ function AddStory({ setOpenUpdate, userId }) {
 
   const handleClick = async (e) => {
     e.preventDefault()
-    let coverUrl
 
-    coverUrl = await upload(cover)
+    const formData = new FormData()
+    if (cover) formData.append("img", cover)
 
-    addStory.mutate({ img: coverUrl })
+    addStory.mutate(formData)
     setOpenUpdate(false)
   }
 

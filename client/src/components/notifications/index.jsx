@@ -25,7 +25,7 @@ const Notifications = ({ notificationData }) => {
     "& .MuiButtonBase-root": {
       width: "300px",
       display: "flex",
-      justifyContent: "flex-end",
+      justifyContent: "space-between",
       alignItems: "center",
       gap: "20px",
     },
